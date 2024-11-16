@@ -1,0 +1,304 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+    }
+
+    .step-wizard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .step-wizard-list {
+        background: #fff;
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        color: #333;
+        list-style-type: none;
+        border-radius: 10px;
+        display: flex;
+        padding: 20px 10px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .step-wizard-item {
+        padding: 0 20px;
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        min-width: 170px;
+        position: relative;
+    }
+
+    .step-wizard-item+.step-wizard-item:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 19px;
+        background: #21d4fd;
+        width: 100%;
+        height: 2px;
+        transform: translateX(-50%);
+        z-index: -10;
+    }
+
+    .progress-count {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 600;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+        color: transparent;
+    }
+
+    .progress-count:after {
+        content: "";
+        height: 40px;
+        width: 40px;
+        background: #21d4fd;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: -10;
+    }
+
+    .progress-label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    /* New styles for the active and completed steps */
+    .completed .progress-count {
+        color: white;
+    }
+
+    .completed .progress-count:after {
+        background: #21d4fd;
+    }
+
+    .current-item .progress-count {
+        color: #21d4fd;
+    }
+
+    .current-item .progress-count:after {
+        border: 2px solid #21d4fd;
+        background: white;
+    }
+
+    .current-item~.step-wizard-item .progress-count:after {
+        height: 10px;
+        width: 10px;
+    }
+
+    .current-item~.step-wizard-item .progress-label {
+        opacity: 0.5;
+    }
+
+    .current-item .progress-label {
+        color: #21d4fd;
+    }
+
+    .current-item .progress-count:before {
+        content: "";
+        height: 10px;
+        width: 20px;
+        border-left: 3px solid #fff;
+        border-bottom: 3px solid #fff;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -60%) rotate(-45deg);
+        transform-origin: center center;
+    }
+
+
+    /* .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    } */
+
+    h2 {
+        margin-top: 0;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .section {
+        width: 48%;
+    }
+
+    .summary,
+    .charges {
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        margin-top: 20px;
+    }
+
+    .item {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .item img {
+        width: 100px;
+        margin-right: 15px;
+    }
+
+    .charges table {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    table td {
+        padding: 5px 0;
+    }
+
+    table td:last-child {
+        text-align: right;
+    }
+</style>
+
+<div class="container mt-5 d-flex flex-column align-items-center">
+    <h2 class="text-center mb-4">Track You Order</h2>
+
+    <form action="/getorderNologin" method="get" id="formfind" class="mt-4 w-50 p-3 border rounded bg-light">
+        <!-- Email Input -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+
+        <!-- Order ID Input -->
+        <div class="mb-3">
+            <label for="Orderid" class="form-label">Order ID</label>
+            <input type="text" class="form-control" id="Orderid" name="Orderid" placeholder="Enter the Order ID"
+                required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Find Order</button>
+    </form>
+
+    <% if (message) { %>
+        <div class="alert alert-danger mt-4 w-50" role="alert">
+            <%= message %>
+        </div>
+        <% } %>
+
+            <% if (order) { %>
+                <div class="container" id="containerInfor">
+                    <div class="row">
+                        <div class="section">
+                            <h3>Purchase Summary</h3>
+                            <p>
+                                <%= order.orderDate %>
+                            </p>
+                            <p>Total cost: $<%= order.totalAmount %> (<%= order.orderDetails.length %> item)</p>
+                            <p>Payment: MasterCard</p>
+                            <p>CardNumber: <%= order.cardNumber %>
+                            </p>
+                        </div>
+
+                        <div class="section" style="padding-left: 200px;">
+                            <h3>Delivery</h3>
+                            <p><strong>Shipping (<%= order.orderDetails.length %> item)</strong></p>
+                            <p>
+                                <%= order.username %>
+                            </p>
+                            <p>
+                                <%= order.address %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary">
+                        <h3>Shipped - <%= order.orderDetails.length %> Item</h3>
+                        <p>Tracking Number: <%= order.StrackNumber %>
+                        </p>
+                        <p>Package Carrier: Ship</p>
+
+
+                        <% order.orderDetails.forEach(detail=> { %>
+                            <div class="item">
+                                <% if (detail.product.images && detail.product.images.length> 0) { %>
+                                    <img src="<%= detail.product.images[0].url %>" alt="Relaxed Bomber Jacket">
+                                    <% } %>
+                                        <div>
+                                            <p><strong>
+                                                    <%= detail.product.name %>
+                                                </strong></p>
+                                            <p>Price: $<%= detail.product.price %>
+                                            </p>
+                                        </div>
+                            </div>
+                            <% }) %>
+                    </div>
+
+                    <div class="charges">
+                        <h3>Summary of Charges</h3>
+                        <table>
+                            <tr>
+                                <td>Subtotal (<%= order.orderDetails.length %> item)</td>
+                                <td>$<%= order.totalAmount - 25 - 5 %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Shipping</td>
+                                <td>$25</td>
+                            </tr>
+                            <tr>
+                                <td>Est. Tax</td>
+                                <td>$5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong>$<%= order.totalAmount %></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+
+</div>
+<% } %>
+
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const containerInfor = document.getElementById('containerInfor');
+            const formfind = document.getElementById('formfind');
+
+            // Check if containerInfor has content (if "order" object is present in the rendered page)
+            if (containerInfor && containerInfor.innerHTML.trim() !== "") {
+                formfind.style.display = 'none'; // Hide the form if there is order information
+            }
+        });
+    </script>

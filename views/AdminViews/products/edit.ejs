@@ -1,0 +1,205 @@
+<h1>Edit Product</h1>
+<style>
+  .ck.ck-editor__main>.ck-editor__editable {
+    height: 200px;
+  }
+</style>
+
+<form id="editForm" action="/admin/products/<%= product.id%>" method="POST" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="name" class="form-label">Product Name</label>
+    <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <div id="editor" name="description"></div>
+    <input type="hidden" id="description" name="description"> <!-- Hidden input to submit CKEditor content -->
+  </div>
+
+  <div id="storageList">
+    <h3>Storage Options</h3>
+    <div id="sizePriceContainer">
+      <% product.storages.forEach((storage)=> { %>
+        <div class="d-flex mb-2">
+          <select class="form-select me-2" name="sizes[]" required>
+            <option value="<%= storage.id %>">
+              <%= storage.size %>
+            </option>
+          </select>
+          <input type="number" class="form-control me-2" name="prices[]" value="<%= storage.ProductVariants.price %>"
+            placeholder="Price" step="0.01" required>
+          <button type="button" class="btn btn-danger remove-size">Remove</button>
+        </div>
+        <% }) %>
+    </div>
+    <button type="button" id="addSizePrice" class="btn btn-primary">Add Size/Price</button>
+  </div>
+
+  <template id="sizePriceTemplate">
+    <div class="d-flex mb-2">
+      <select class="form-select me-2" name="sizes[]" required>
+        <% Store.forEach((store)=> { %>
+          <option value="<%= store.id %>">
+            <%= store.size %>
+          </option>
+          <% }) %>
+      </select>
+      <input type="number" class="form-control me-2" name="prices[]" placeholder="Price" step="0.01" required>
+      <button type="button" class="btn btn-danger remove-size">Remove</button>
+    </div>
+  </template>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Category</label>
+    <select class="form-select" id="category" name="category" required>
+      <% categories.forEach((category, index)=> { %>
+        <option value="<%= category.id %>" <%=index===0 ? 'selected' : '' %>><%= category.name %>
+        </option>
+        <% }) %>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="category" class="form-label">Product Type</label>
+    <select class="form-select" id="category" name="TypeProductId" required>
+      <% producttype.forEach((category, index)=> { %>
+        <option value="<%= category.id %>" <%=index===0 ? 'selected' : '' %>><%= category.name %>
+        </option>
+        <% }) %>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>" step="0.01" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="stock" class="form-label">Stock</label>
+    <input type="number" class="form-control" id="stock" name="stock" value="<%= product.stock %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="brand" class="form-label">Brand</label>
+    <input type="text" class="form-control" id="brand" name="brand" value="<%= product.brand %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="color" class="form-label">Color</label>
+    <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="size" class="form-label">Size</label>
+    <input type="text" class="form-control" id="size" name="size" value="<%= product.size %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="images" class="form-label">Images (Upload multiple images)</label>
+    <input type="file" class="form-control" id="images" name="images" multiple>
+    <small class="form-text text-muted">
+      Current images:
+      <div id="currentImages" class="d-flex flex-wrap" style="padding-top: 25px;">
+        <%- product.images.map((img, index)=> `
+          <div class="position-relative me-2 mb-2">
+            <img src="${img.url}" alt="product image" style="width: 50px; height: 50px; margin: 5px;">
+            <input type="hidden" name="removeImages[]" value=""> <!-- This will hold the ID when removed -->
+            <input type="hidden" class="original-image-id" value="${img.id}"> <!-- Store the original ID -->
+            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle"
+              data-index="${index}" aria-label="Remove image"
+              style="font-size: 12px; padding: 0.1rem 0.3rem; border-radius: 50%;">&times;</button>
+          </div>
+          `).join('') %>
+      </div>
+    </small>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+  let editor;
+  ClassicEditor
+    .create(document.querySelector('#editor'), {
+      // Increase the minimum height of the editor
+      minHeight: '300px', // Set the minimum height of the input area
+      // Other configuration options can go here
+    })
+    .then(newEditor => {
+      editor = newEditor;
+      editor.setData(`<%= product.description %>`);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+  // When the form is submitted, set the content of the hidden input
+  document.getElementById('editForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent default form submission
+    // if (confirm('Are you sure you want to save changes to this product?')) {
+    //   // Set the content of the hidden input to the CKEditor data
+    //   document.getElementById('description').value = editor.getData();
+    //   this.submit(); // Submit the form
+    // }
+
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save changes to this product?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('description').value = editor.getData();
+        this.submit(); // This will submit the form
+      }
+    });
+
+  });
+
+  document.getElementById('addSizePrice').addEventListener('click', function () {
+    // Get the template
+    const template = document.getElementById('sizePriceTemplate');
+    // Clone the template content
+    const newSizePrice = template.content.cloneNode(true);
+    // Append the cloned content to the container
+    document.getElementById('sizePriceContainer').appendChild(newSizePrice);
+  });
+
+  // Event delegation for removing size/price entries
+  document.getElementById('sizePriceContainer').addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-size')) {
+      e.target.closest('.d-flex').remove(); // Remove the closest entry
+    }
+  });
+
+  // Handling image removal
+  document.getElementById('currentImages').addEventListener('click', function (e) {
+    if (e.target.tagName === 'BUTTON') {
+      const imageContainer = e.target.closest('.position-relative'); // Get the parent container of the image
+      const checkbox = imageContainer.querySelector('input[name="removeImages[]"]'); // Get the hidden input for removal
+      const originalId = imageContainer.querySelector('.original-image-id').value; // Get the original image ID
+
+      // Log the original ID for debugging
+      console.log('Removing image ID:', originalId);
+
+      // Set the hidden input value to the original ID to indicate removal
+      checkbox.value = originalId;
+
+      // Remove the image container from the DOM
+      imageContainer.classList.add('d-none'); // Hide the image container instead of removing it
+
+      // Log the current state of removeImages for debugging
+      const removeImages = Array.from(document.querySelectorAll('input[name="removeImages[]"]')).map(input => input.value);
+      console.log('Current removeImages array:', removeImages);
+    }
+  });
+
+</script>

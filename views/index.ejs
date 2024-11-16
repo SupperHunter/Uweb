@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Test</title>
+</head>
+
+<body>
+    <h1>Socket.IO Connection Test</h1>
+    <p id="status">Connecting...</p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Tự động kết nối tới server
+
+        // Kiểm tra kết nối thành công
+        socket.on('connect', () => {
+            console.log('Connected to server:', socket.id);
+            document.getElementById('status').innerText = 'Connected successfully!';
+        });
+
+        // Lỗi khi kết nối thất bại
+        socket.on('connect_error', (error) => {
+            console.error('Connection failed:', error);
+            document.getElementById('status').innerText = 'Connection failed!';
+        });
+
+        // Lắng nghe sự kiện 'disconnect' khi client bị ngắt kết nối
+        socket.on('disconnect', () => {
+            document.getElementById('status').innerText = 'Disconnected!';
+        });
+    </script>
+</body>
+
+</html>

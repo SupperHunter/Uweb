@@ -1,0 +1,52 @@
+<div class="container mt-5">
+    <h1 class="text-center">Manage Storage Sizes</h1>
+
+    <!-- Form để thêm kích thước lưu trữ -->
+    <form action="/admin/storages" method="POST" class="mb-4">
+        <div class="form-group">
+            <label for="size">Storage Size (e.g., 64GB, 128GB)</label>
+            <input type="text" class="form-control" name="size" required placeholder="Enter storage size">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Storage Size</button>
+    </form>
+
+    <!-- Danh sách các kích thước lưu trữ -->
+    <h2>Existing Storage Sizes</h2>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th> <!-- Thêm cột chỉ số -->
+                <th>Size</th>
+                <th>Edit Size</th> <!-- Thêm cột cho ô input chỉnh sửa -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% storages.forEach((storage, index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td> <!-- Hiển thị chỉ số -->
+                    <td>
+                        <%= storage.size %>
+                    </td>
+                    <td>
+                        <form action="/admin/storages/<%= storage.id %>/update" method="POST" class="d-inline">
+                            <input type="text" class="form-control" name="size" value="<%= storage.size %>" required>
+                            <button type="submit" class="btn btn-warning btn-sm mt-2">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <% if (storage.IsActive) { %>
+                            <form action="/admin/storages/<%= storage.id %>/delete" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Deactivate</button>
+                            </form>
+                            <% } else { %>
+                                <span class="text-muted">Deactivated</span>
+                                <% } %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>

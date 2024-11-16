@@ -1,0 +1,68 @@
+<h1>Edit Product Type</h1>
+
+<style>
+  .ck.ck-editor__main>.ck-editor__editable {
+    height: 200px;
+  }
+</style>
+
+<form id="editCategoryForm" action="/admin/ProductType/edit/<%= category.id %>" method="POST">
+  <div class="mb-3">
+    <label for="name" class="form-label">Category Name</label>
+    <input type="text" class="form-control" id="name" name="name" value="<%= category.name %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="Description" class="form-label">Description</label>
+    <div id="editor" name="Description"></div>
+    <input type="hidden" id="Description" name="Description"> <!-- Hidden input to submit CKEditor content -->
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script>
+  let editor;
+  ClassicEditor
+    .create(document.querySelector('#editor'), {
+      // Increase the minimum height of the editor
+      minHeight: '300px', // Set the minimum height of the input area
+    })
+    .then(newEditor => {
+      editor = newEditor;
+      // Set the existing category description in the editor if it exists
+      editor.setData(`<%= category.Description %>`);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+  // When the form is submitted, set the content of the hidden input
+  document.getElementById('editCategoryForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent default form submission
+    // if (confirm('This function is being updated.?')) {
+    //   // Set the content of the hidden input to the CKEditor data
+    //   document.getElementById('Description').value = editor.getData();
+    //   this.submit(); // Submit the form
+    // }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This function is being updated?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('Description').value = editor.getData();
+        this.submit(); // This will submit the form
+      }
+    });
+
+  });
+</script>

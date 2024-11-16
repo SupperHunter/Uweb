@@ -1,0 +1,248 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery-Confirm CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery.confirm.min.css">
+
+<!-- jQuery-Confirm JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery.confirm.min.js"></script>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+<div class="container mt-5">
+    <h1 class="text-center">User Management</h1>
+
+    <!-- Table for user list -->
+
+    <div class="mt-4 mb-3 d-flex justify-content-end">
+        <input type="text" id="searchInput" class="form-control me-2" placeholder="Search by username or email"
+            style="width: 300px;">
+        <button class="btn btn-primary" onclick="fetchUsers(99999)">Search</button>
+    </div>
+    <div class="mt-4">
+        <h3>User List</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>New Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userList"></tbody>
+        </table>
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination" id="paginationControls"></ul>
+        </nav>
+    </div>
+</div>
+
+<!-- SweetAlert2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    let currentPage = 1; // Initialize current page
+    const limit = 10;    // Number of users per page
+
+    function fetchUsers(page = 1) {
+        const searchTerm = $('#searchInput').val().trim();
+
+        let newurl = '';
+        if (page != 99999) {
+            newurl = `/admin/users?page=${page}&limit=${limit}`;
+        } else {
+            newurl = `/admin/users/search?page=${1}&limit=${limit}&ketsearch=${searchTerm}`
+        }
+
+        $.ajax({
+            url: newurl,
+            method: 'GET',
+            success: function (response) {
+                let userRows = '';
+                response.users.forEach(user => {
+                    userRows += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>User</td>
+                            <td>
+                                <input type="password" class="form-control" id="newPassword-${user.id}" placeholder="New Password">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="updatePassword(${user.id})">Save</button>
+                                ${user.blocked == 0 ?
+                            `<button class="btn btn-success btn-sm" onclick="unblockUser(${user.id})">Unblock</button>` :
+                            `<button class="btn btn-danger btn-sm" onclick="blockUser(${user.id})">Block</button>`
+                        }
+                                <a href="/admin/rendeUserInfor/${user.id}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </td>
+                        </tr>`;
+                });
+                $('#userList').html(userRows);
+
+                // Update pagination controls
+                updatePagination(response.totalPages, page);
+            },
+            error: function (error) {
+                console.error('Error fetching users:', error);
+            }
+        });
+    }
+
+    // Update password directly in the table
+    function updatePassword(userId) {
+        const newPassword = $(`#newPassword-${userId}`).val();
+        if (!newPassword || newPassword.length < 8) {
+            Swal.fire({
+                title: 'Error',
+                text: !newPassword ? 'Please enter a new password!' : 'Character length must be greater than 8',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Show confirmation dialog using SweetAlert2
+        Swal.fire({
+            title: 'Warning',
+            text: 'Are you sure you want to change the password?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/users/${userId}/change-password`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ newPassword }),
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Password changed successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        $(`#newPassword-${userId}`).val(''); // Clear the input field
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `Error changing password: ${error.responseText || 'Unknown error'}`,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Block user
+    function blockUser(userId) {
+        Swal.fire({
+            title: 'Warning',
+            text: 'Are you sure you want to block this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, block it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/users/${userId}/block`,
+                    method: 'POST',
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'User blocked successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                fetchUsers(currentPage); // Refresh the current page
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `Error blocking user: ${error.responseText || 'Unknown error'}`,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Unblock user
+    function unblockUser(userId) {
+        Swal.fire({
+            title: 'Warning',
+            text: 'Are you sure you want to unblock this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, unblock it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/users/${userId}/unblock`,
+                    method: 'POST',
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'User unblocked successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            fetchUsers(currentPage); // Refresh the current page
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `Error unblocking user: ${error.responseText || 'Unknown error'}`,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Update pagination controls
+    function updatePagination(totalPages, currentPage) {
+        let paginationControls = '';
+
+        for (let page = 1; page <= totalPages; page++) {
+            paginationControls += `
+                <li class="page-item ${page === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="fetchUsers(${page})">${page}</a>
+                </li>`;
+        }
+
+        $('#paginationControls').html(paginationControls);
+    }
+
+    // Fetch users on page load
+    $(document).ready(function () {
+        fetchUsers(currentPage);
+    });
+</script>

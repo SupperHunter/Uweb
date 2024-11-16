@@ -1,0 +1,279 @@
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination ul {
+        justify-content: space-between;
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+    .pagination ul li {
+        margin: 0 5px;
+        flex-grow: 0;
+        /* Đảm bảo rằng các phần tử không kéo dài ra toàn bộ chiều rộng */
+    }
+
+    .pagination ul li a {
+        display: inline-block;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s ease;
+        white-space: nowrap;
+        /* Đảm bảo văn bản không xuống dòng */
+    }
+
+    .pagination ul li.current a {
+        background-color: #f2223b;
+        color: white;
+        border-color: #f2223b;
+    }
+
+    .pagination ul li a:hover {
+        background-color: #f2223b;
+        color: white;
+    }
+
+
+    ul.pagination {
+        display: flex;
+        list-style-type: none;
+        padding: 0;
+        justify-content: center;
+    }
+
+    ul.pagination li {
+        margin: 0 5px;
+    }
+
+    ul.pagination li a {
+        display: inline-block;
+        padding: 8px 12px;
+        color: #333;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    ul.pagination li a:hover {
+        background-color: #f0f0f0;
+    }
+
+    ul.pagination li.current a {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    ul.pagination li.next a {
+        font-weight: bold;
+    }
+</style>
+<h1 class="h3 container mb-4" style="padding-top: 15px;">Shop catalog</h1>
+<section class="accordion container pb-4 pb-md-5 mb-xl-3">
+    <div class="accordion-item border-0">
+        <div class="accordion-header d-md-none" id="offersHeading">
+            <button type="button"
+                class="accordion-button w-auto fw-medium collapsed border border-dashed border-danger border-opacity-50 rounded py-2 px-3"
+                data-bs-toggle="collapse" data-bs-target="#offers" aria-expanded="false" aria-controls="offers">
+                <span class="d-inline-flex ci-percent fs-lg text-danger rounded-circle me-2"></span>
+                <span class="me-2">See latest offers</span>
+            </button>
+        </div>
+        <div class="accordion-collapse collapse d-md-block" id="offers" aria-labelledby="offersHeading">
+            <div class="row g-3 g-lg-4 pt-3 pt-md-0">
+                <div class="col-md-7">
+                    <div
+                        class="position-relative d-flex flex-column flex-sm-row align-items-center h-100 rounded-5 overflow-hidden px-5 px-sm-0 pe-sm-4">
+                        <span class="position-absolute top-0 start-0 w-100 h-100 d-none-dark rtl-flip"
+                            style="background: linear-gradient(90deg, #accbee 0%, #e7f0fd 100%)"></span>
+                        <span class="position-absolute top-0 start-0 w-100 h-100 d-none d-block-dark rtl-flip"
+                            style="background: linear-gradient(90deg, #1b273a 0%, #1f2632 100%)"></span>
+                        <div
+                            class="position-relative z-1 text-center text-sm-start pt-4 pt-sm-0 ps-xl-4 mt-2 mt-sm-0 order-sm-2">
+                            <h2 class="h3 mb-2">iPhone 16</h2>
+                            <p class="fs-sm text-light-emphasis mb-sm-4">Apple iPhone 16 128GB Blue</p>
+
+                        </div>
+                        <div class="position-relative z-1 w-100 align-self-end order-sm-1" style="max-width: 416px">
+                            <div class="ratio rtl-flip" style="--cz-aspect-ratio: calc(320 / 416 * 100%)">
+                                <img src="/client2/assets/img/shop/electronics/banners/iphone-1.png" alt="iPhone 16">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div
+                        class="position-relative d-flex flex-column align-items-center justify-content-between h-100 rounded-5 overflow-hidden pt-3">
+                        <span class="position-absolute top-0 start-0 w-100 h-100 d-none-dark rtl-flip"
+                            style="background: linear-gradient(90deg, #fdcbf1 0%, #fdcbf1 1%, #ffecfa 100%)"></span>
+                        <span class="position-absolute top-0 start-0 w-100 h-100 d-none d-block-dark rtl-flip"
+                            style="background: linear-gradient(90deg, #362131 0%, #322730 100%)"></span>
+                        <div class="position-relative z-1 text-center pt-3 mx-4">
+                            <i class="ci-apple text-body-emphasis fs-3 mb-3"></i>
+                            <p class="fs-sm text-light-emphasis mb-1">Deal of the week</p>
+                            <h2 class="h3 mb-4">iPad Pro M1</h2>
+                        </div>
+                        <a class="position-relative z-1 d-block w-100" href="#">
+                            <div class="ratio" style="--cz-aspect-ratio: calc(159 / 525 * 100%)">
+                                <img src="/client2/assets/img/shop/electronics/banners/ipad.png" width="525" alt="iPad">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Selected filters + Sorting -->
+
+
+<!-- Products grid + Sidebar with filters -->
+<section class="container pb-5 mb-sm-2 mb-md-3 mb-lg-4 mb-xl-5">
+    <div class="row">
+        <!-- Product grid -->
+        <!-- <div class="col-lg-9"> -->
+        <div class="row row-cols-2 row-cols-md-4 g-4 pb-3 mb-3">
+
+            <!-- Item -->
+            <% products.forEach(function(product) { function truncateDescription(description, maxLength) { if
+                (description.length>
+                maxLength) {
+                return description.substring(0, maxLength) + '...';
+                } else {
+                return description;
+                }
+                }
+
+
+                %>
+
+                <div class="col">
+                    <div class="product-card animate-underline hover-effect-opacity bg-body rounded">
+                        <div class="position-relative">
+                            <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 mt-3 me-3">
+                                <div class="d-flex flex-column gap-2">
+                                    <button type="button"
+                                        class="btn btn-icon btn-secondary animate-pulse d-none d-lg-inline-flex"
+                                        aria-label="Add to Wishlist">
+                                        <i class="ci-heart fs-base animate-target"></i>
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-icon btn-secondary animate-rotate d-none d-lg-inline-flex"
+                                        aria-label="Compare">
+                                        <i class="ci-refresh-cw fs-base animate-target"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="dropdown d-lg-none position-absolute top-0 end-0 z-2 mt-2 me-2">
+                                <button type="button" class="btn btn-icon btn-sm btn-secondary bg-body"
+                                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">
+                                    <i class="ci-more-vertical fs-lg"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end fs-xs p-2" style="min-width: auto">
+                                    <li>
+                                        <a class="dropdown-item" href="#!">
+                                            <i class="ci-heart fs-sm ms-n1 me-2"></i>
+                                            Add to Wishlist
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!">
+                                            <i class="ci-refresh-cw fs-sm ms-n1 me-2"></i>
+                                            Compare
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a class="d-block rounded-top overflow-hidden p-3 p-sm-4"
+                                href="/productdetail/<%= product.id%>">
+                                <div class="ratio" style="--cz-aspect-ratio: calc(240 / 258 * 100%)">
+                                    <img src="<%= product.images[0].url %>" alt="<%= product.name %>">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="w-100 min-w-0 px-1 pb-2 px-sm-3 pb-sm-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="d-flex gap-1 fs-xs">
+                                    <i class="ci-star-filled text-warning"></i>
+                                    <i class="ci-star-filled text-warning"></i>
+                                    <i class="ci-star-filled text-warning"></i>
+                                    <i class="ci-star-filled text-warning"></i>
+                                    <i class="ci-star text-body-tertiary opacity-75"></i>
+                                </div>
+                                <span class="text-body-tertiary fs-xs">
+                                    in stock
+                                </span>
+                            </div>
+                            <h3 class="pb-1 mb-2">
+                                <a class="d-block fs-sm fw-medium text-truncate" href="/productdetail/<%= product.id%>">
+                                    <span class="animate-target">
+                                        <%= product.name %>
+                                    </span>
+                                </a>
+                            </h3>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="h5 lh-1 mb-0">
+                                    $<%= product.price %>
+                                </div>
+                                <form action="/addtocard" method="post">
+                                    <input type="text" name="productId" value="<%= product.id %>" hidden>
+                                    <button type="submit"
+                                        class="product-card-button btn btn-icon btn-secondary animate-slide-end ms-2"
+                                        aria-label="Add to Cart">
+                                        <i class="ci-shopping-cart fs-base animate-target"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div
+                            class="product-card-details position-absolute top-100 start-0 w-100 bg-body rounded-bottom shadow mt-n2 p-3 pt-1">
+                            <span class="position-absolute top-0 start-0 w-100 bg-body mt-n2 py-2"></span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <% }) %>
+
+        </div>
+    </div>
+
+    <div class="pagination">
+        <ul class="pagination">
+            <% let startPage=Math.max(1, currentPage - 5); let endPage=Math.min(totalPages, currentPage + 4); if
+                (endPage - startPage < 9) { if (startPage===1) { endPage=Math.min(10, totalPages); } else if
+                (endPage===totalPages) { startPage=Math.max(1, totalPages - 9); } } %>
+
+                <% for (let i=startPage; i <=endPage; i++) { %>
+                    <li class="<%= currentPage === i ? 'current' : '' %>">
+                        <a
+                            href="?page=<%= i %>&categoryId=<%= currentCategory || '' %>&TypeProduct=<%= currentTypeProduct || '' %>&typepage=<%= typetage %>">
+                            <%= i %>
+                        </a>
+                    </li>
+                    <% } %>
+
+                        <% if (currentPage < totalPages) { %>
+                            <li class="next">
+                                <a
+                                    href="?page=<%= currentPage + 1 %>&categoryId=<%= currentCategory || '' %>&TypeProduct=<%= currentTypeProduct || '' %>&typepage=<%= typetage %>">
+                                    Next
+                                </a>
+                            </li>
+                            <% } %>
+        </ul>
+    </div>
+</section>

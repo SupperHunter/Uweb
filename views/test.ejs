@@ -1,0 +1,209 @@
+<div class="shop_area shop_fullwidth mt-60 mb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!--shop wrapper start-->
+                <!--shop toolbar start-->
+                <div class="shop_toolbar_wrapper">
+                    <div class="shop_toolbar_btn">
+
+                        <button data-role="grid_3" type="button" class=" btn-grid-3" data-bs-toggle="tooltip"
+                            title="3"></button>
+
+                        <button data-role="grid_4" type="button" class="active btn-grid-4" data-bs-toggle="tooltip"
+                            title="4"></button>
+
+                        <button data-role="grid_list" type="button" class="btn-list" data-bs-toggle="tooltip"
+                            title="List"></button>
+                    </div>
+                    <div class=" niceselect_option">
+                        <!-- <form class="select_option" action="#">
+                            <select name="orderby" id="short">
+
+                                <option selected value="1">Sort by average rating</option>
+                                <option value="2">Sort by popularity</option>
+                                <option value="3">Sort by newness</option>
+                                <option value="4">Sort by price: low to high</option>
+                                <option value="5">Sort by price: high to low</option>
+                                <option value="6">Product Name: Z</option>
+                            </select>
+                        </form> -->
+                    </div>
+                    <div class="page_amount">
+                        <p>Showing 1–9 of 21 results</p>
+                    </div>
+                </div>
+                <!--shop toolbar end-->
+
+                <div class="row shop_wrapper">
+
+                    <% products.forEach(function(product) { function truncateDescription(description, maxLength) { if
+                        (description.length> maxLength) {
+                        return description.substring(0, maxLength) + '...';
+                        } else {
+                        return description;
+                        }
+                        }
+
+
+                        %>
+
+                        <div class="col-lg-3 col-md-4 col-12 ">
+                            <article class="single_product">
+                                <figure>
+                                    <div class="product_thumb">
+                                        <a class="primary_img" href="/productdetail/<%= product.id%>"><img
+                                                src="<%= product.images[0].url %>" alt=""></a>
+                                        <a class="secondary_img" href="/productdetail/<%= product.id%>"><img
+                                                src="<%= product.images[0].url %>" alt=""></a>
+                                        <div class="label_product">
+                                            <span class="label_sale">sale</span>
+                                        </div>
+                                        <div class="action_links">
+                                            <ul>
+                                                <li class="wishlist"><a href="#" title="Add to Wishlist"><i
+                                                            class="fa fa-heart-o" aria-hidden="true"></i></a></li>
+                                                <li class="compare"><a href="#" title="compare"><span
+                                                            class="ion-levels"></span></a></li>
+                                                <li class="quick_button"><a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#modal_box" title="quick view"> <span
+                                                            class="ion-ios-search-strong"></span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="add_to_cart">
+                                            <a href="javascript:void(0)" title="Add to cart" class="addToCart"
+                                                data-product-id="<%= product.id %>">Add to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                    <div class="product_content grid_content">
+                                        <div class="price_box">
+                                            <span class="old_price">$86.00</span>
+                                            <span class="current_price">
+                                                <%= product.price%>
+                                            </span>
+                                        </div>
+                                        <div class="product_ratings">
+                                            <ul>
+                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="product_name grid_name"><a href="/productdetail/<%= product.id%>"><%-
+                                                    truncateDescription(product.description, 10) %></a></h3>
+                                    </div>
+                                    <div class="product_content list_content">
+                                        <div class="left_caption">
+                                            <div class="price_box">
+                                                <span class="old_price">$86.00</span>
+                                                <span class="current_price">
+                                                    <%= product.price%>
+                                                </span>
+                                            </div>
+                                            <h3 class="product_name"><a href="/productdetail/<%= product.id%>">Cras
+                                                    <%- truncateDescription(product.description, 10) %></a></h3>
+                                            <div class="product_ratings">
+                                                <ul>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="product_desc">
+                                                <p><%- truncateDescription(product.description, 52) %></p>
+                                            </div>
+                                        </div>
+                                        <div class="right_caption">
+                                            <div class="add_to_cart">
+                                                <a href="javascript:void(0)" title="Add to cart" class="addToCart"
+                                                    data-product-id="<%= product.id %>">Add to
+                                                    cart</a>
+                                            </div>
+                                            <div class="action_links">
+                                                <ul>
+                                                    <li class="wishlist"><a href="#" title="Add to Wishlist"><i
+                                                                class="fa fa-heart-o" aria-hidden="true"></i> Add to
+                                                            Wishlist</a></li>
+                                                    <li class="compare"><a href="#" title="compare"><span
+                                                                class="ion-levels"></span> Compare</a></li>
+                                                    <li class="quick_button"><a href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#modal_box" title="quick view"> <span
+                                                                class="ion-ios-search-strong"></span> Quick View</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </figure>
+                            </article>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    document.querySelectorAll('.addToCart').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            const productId = this.getAttribute('data-product-id');
+            console.log('Product ID:', productId); // Debug: Check if correct product ID is retrieved
+            // Perform a POST request using Fetch API
+            fetch('/addtocard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    quantity: 1, // Default quantity for now
+                }),
+            })
+                .then(response => {
+                    if (response.headers.get('content-type')?.includes('application/json')) {
+                        return response.json();
+                    } else {
+                        throw new Error('Expected JSON response, but got something else');
+                    }
+                })
+                .then(data => {
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.location.reload();
+                });
+        });
+    });
+    document.getElementById('addToCartForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form from reloading the page
+        const formData = new FormData(this); // Get form data
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json()) // Assuming the server returns JSON
+            .then(data => {
+                // Handle success, e.g., show a success message or update cart count
+                alert('Product added to cart successfully!');
+            })
+            .catch(error => {
+                // Handle error, e.g., show an error message
+                console.error('Error:', error);
+                alert('An error occurred while adding the product to the cart.');
+            });
+    });
+
+
+
+</script>

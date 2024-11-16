@@ -1,0 +1,29 @@
+const { DataTypes } = require('sequelize');
+const sequelize = require('../Connect/dbConnect');
+
+const Address = sequelize.define("Address", {
+    street: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    city: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    state: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    postalCode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    tableName: 'addresses',
+    timestamps: true, // Adds 'createdAt' and 'updatedAt' fields automatically
+});
+module.exports = Address;
