@@ -7,6 +7,7 @@ const TypeProduct = require("../../models/TypeProduct");
 const Storage = require("../../models/Storage");
 const ProductVariants = require("../../models/ProductVariants");
 const { model } = require("mongoose");
+const imageToBase64 = require("../../utils/ImageBase64");
 class ProductController {
     async createProduct(req, res) {
         try {
@@ -42,21 +43,28 @@ class ProductController {
 
             }
             if (req.files && req.files.length > 0) {
-                const imageUploadPromises = req.files.map((file) => {
-                    return new Promise((resolve, reject) => {
-                        cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-                            if (error) {
-                                return reject(error);
-                            }
-                            resolve(result.secure_url);
-                        }).end(file.buffer);
-                    });
+                const imageUploadPromises = req.files.map(async (file) => {
+                    // return new Promise((resolve, reject) => {
+                    //     cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                    //         if (error) {
+                    //             return reject(error);
+                    //         }
+                    //         resolve(result.secure_url);
+                    //     }).end(file.buffer);
+                    // });
+//  hoàn thành được chuyển đổi image sang nhị phân
+// sử dụng cloudinary đang bị 1 vấn đề là bị delay quá nhiều thời gian 
+                    try {
+                        const imagebase64 = await imageToBase64(file);
+                        return {
+                            url : imagebase64, 
+                            productId: product.id
+                        } 
+                    } catch (error) {
+                        
+                    }
                 });
-                const imageUrls = await Promise.all(imageUploadPromises);
-                const productImages = imageUrls.map((url) => ({
-                    url: url,
-                    productId: product.id,
-                }));
+                const productImages = await Promise.all(imageUploadPromises);
                 await Image.bulkCreate(productImages);
             }
             res.redirect('/admin/products');
@@ -65,7 +73,7 @@ class ProductController {
             res.status(500).send(err.message);
         }
     }
-
+// show ra form tạo sản phẩm
     async showCreateForm(req, res) {
         const categories = await Category.findAll({
             where: { IsActive: true }

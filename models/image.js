@@ -5,7 +5,7 @@ const Product = require('./product');
 // Tạo model Image
 const Image = sequelize.define('Image', {
   url: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   productId: {

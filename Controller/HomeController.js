@@ -14,54 +14,6 @@ const sendEmail = require("../utils/sendEmail");
 class HomeController {
     constructor() { }
     async HomeRender(req, res) {
-        // const limit = 9;
-        // const page = parseInt(req.query.page) || 1;
-        // const categoryId = req.query.categoryId;
-        // try {
-        //     const { count, rows: products } = await Product.findAndCountAll({
-        //         where: categoryId ? { categoryId, IsActive: true } : { IsActive: true },
-        //         order: [['id', 'ASC']],
-        //         limit,
-        //         offset: (page - 1) * limit,
-        //         include: { model: Image, as: 'images' }
-        //     });
-        //     const categories = await Category.findAll({
-        //         where: { IsActive: true },
-        //         limit: 3,
-        //         order: [['id', 'ASC']]
-        //     });
-        //     const totalPages = products.length / limit;
-
-
-        //     const categoryProducts = await Promise.all(
-        //         categories.map(async (category) => {
-        //             const { count, rows: products } = await Product.findAndCountAll({
-        //                 where: { categoryId: category.id, IsActive: true }, // Filter products by category
-        //                 order: [['id', 'ASC']],
-        //                 limit,
-        //                 include: { model: Image, as: 'images' }
-        //             });
-        //             return {
-        //                 category,
-        //                 products, // Array of products for this category
-        //             };
-        //         })
-        //     );
-
-
-        //     res.render('User/Home', {
-        //         title: 'Home',
-        //         products: products,
-        //         totalPages,
-        //         currentPage: page,
-        //         categories,
-        //         currentCategory: categoryId,
-        //         categoryProducts
-        //     });
-        // } catch (error) {
-        //     console.error(error);
-        //     res.status(500).send('Internal Server Error');
-        // }
         const categories = await Category.findAll({
             where: { IsActive: true },
             order: [['id', 'ASC']]

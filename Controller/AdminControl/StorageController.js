@@ -14,7 +14,6 @@ class StorageController {
 
     }
 
-
     async create(req, res) {
         try {
             const { size } = req.body;
