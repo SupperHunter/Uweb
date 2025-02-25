@@ -47,15 +47,15 @@ Product.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
 Category.hasMany(Product, { foreignKey: 'categoryId', as: 'products' });
 
 // Associate Product with TypeProduct
-Product.belongsTo(TypeProduct, { foreignKey: 'TypeProductId', as: 'TypeProduct' });
-TypeProduct.hasMany(Product, { foreignKey: 'TypeProductId', as: 'products' });
+// Product.belongsTo(TypeProduct, { foreignKey: 'TypeProductId', as: 'TypeProduct' });
+// TypeProduct.hasMany(Product, { foreignKey: 'TypeProductId', as: 'products' });
 
 // Associate Product with ProductVariants (One-to-Many)
-Product.hasMany(ProductVariants, { foreignKey: 'productId', as: 'variants' });
-ProductVariants.belongsTo(Product, { foreignKey: 'productId' });
+// Product.hasMany(ProductVariants, { foreignKey: 'productId', as: 'variants' });
+// ProductVariants.belongsTo(Product, { foreignKey: 'productId' });
 
 // Associate Product with Storage (Many-to-Many)
-Product.belongsToMany(Storage, { through: ProductVariants, as: 'storages', foreignKey: 'productId' });
-Storage.belongsToMany(Product, { through: ProductVariants, as: 'products', foreignKey: 'storageId' });
+// Product.belongsToMany(Storage, { through: ProductVariants, as: 'storages', foreignKey: 'productId' });
+// Storage.belongsToMany(Product, { through: ProductVariants, as: 'products', foreignKey: 'storageId' });
 
 module.exports = Product;

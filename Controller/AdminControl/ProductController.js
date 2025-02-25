@@ -44,16 +44,6 @@ class ProductController {
             }
             if (req.files && req.files.length > 0) {
                 const imageUploadPromises = req.files.map(async (file) => {
-                    // return new Promise((resolve, reject) => {
-                    //     cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-                    //         if (error) {
-                    //             return reject(error);
-                    //         }
-                    //         resolve(result.secure_url);
-                    //     }).end(file.buffer);
-                    // });
-//  hoàn thành được chuyển đổi image sang nhị phân
-// sử dụng cloudinary đang bị 1 vấn đề là bị delay quá nhiều thời gian 
                     try {
                         const imagebase64 = await imageToBase64(file);
                         return {
@@ -193,24 +183,21 @@ class ProductController {
 
             await product.update({ name, description, price, category, stock, brand, color, size });
             if (req.files && req.files.length > 0) {
-                const imageUploadPromises = req.files.map((file) => {
-                    return new Promise((resolve, reject) => {
-                        cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-                            if (error) {
-                                return reject(error);
-                            }
-                            resolve(result.secure_url);
-                        }).end(file.buffer);
-                    });
+                const imageUploadPromises = req.files.map(async (file) => {
+                    const imagebase64 = await imageToBase64(file);
+                    try {
+                        const imagebase64 = await imageToBase64(file);
+                        return {
+                            url : imagebase64, 
+                            productId: product.id
+                        } 
+                    } catch (error) {
+                        
+                    }
                 });
-                const imageUrls = await Promise.all(imageUploadPromises);
-                const productImages = imageUrls.map((url) => ({
-                    url: url,
-                    productId: product.id,
-                }));
+                const productImages = await Promise.all(imageUploadPromises);
                 await Image.bulkCreate(productImages);
             }
-            console.log(removeImages);
             if (removeImages && Array.isArray(removeImages)) {
                 await Image.destroy({ where: { id: removeImages } });
             }

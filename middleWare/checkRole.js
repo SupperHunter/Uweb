@@ -4,7 +4,6 @@ const Role = require('../models/Role');
 const jwt = require('jsonwebtoken');
 function adminMiddleware(req, res, next) {
   const token = req.body.authToken || req.cookies.authToken;
-  console.log(token)
   if (!token) {
     return res.redirect('/Notpermission'); // Không có token
   }
@@ -13,7 +12,6 @@ function adminMiddleware(req, res, next) {
     if (err) {
       return res.redirect('/Notpermission'); // Token không hợp lệ
     }
-
     if (user.roleId === 1) {
       req.user = user;
       return next();

@@ -44,25 +44,25 @@ app.set('layout', 'layouts/main');
 require('dotenv').config();
 
 
-// const sessionStore = new MySQLStore({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_NAME,
-//   clearExpired: true, // Dọn dẹp session hết hạn
-//   checkExpirationInterval: 900000, // Kiểm tra mỗi 15 phút (900000ms)
-//   expiration: 3600000
-// });
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  clearExpired: true, // Dọn dẹp session hết hạn
+  checkExpirationInterval: 900000, // Kiểm tra mỗi 15 phút (900000ms)
+  expiration: 3600000
+});
 
 
-// app.use(session({
-//   store: sessionStore,
-//   secret: `secret-key-${Date.now()}`,
-//   resave: false,
-//   rolling: true,
-//   saveUninitialized: false,
-//   cookie: { maxAge: 3600000, secure: false }
-// }));
+app.use(session({
+  store: sessionStore,
+  secret: `secret-key-${Date.now()}`,
+  resave: false,
+  rolling: true,
+  saveUninitialized: false,
+  cookie: { maxAge: 3600000, secure: false }
+}));
 
 
 // sequelize.sync({ alter: true }) // Sử dụng { force: true } để xóa và tạo lại bảng
