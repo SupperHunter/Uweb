@@ -4,6 +4,11 @@ const Product = require('./product');
 
 // Tạo model Image
 const Image = sequelize.define('Image', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
+    primaryKey: true
+  },
   url: {
     type: DataTypes.TEXT,
     allowNull: false,

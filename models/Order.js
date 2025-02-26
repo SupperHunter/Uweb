@@ -5,6 +5,11 @@ const OrderDetail = require('./OrderDetail');
 
 const Order = sequelize.define('Order', {
     id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
+        primaryKey: true
+      },
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,

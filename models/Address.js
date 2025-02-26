@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../Connect/dbConnect');
-
+const BannerTille = require('./BannerTille');
 const Address = sequelize.define("Address", {
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
+        primaryKey: true
+      },
     street: {
         type: DataTypes.STRING,
         allowNull: false

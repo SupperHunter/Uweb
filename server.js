@@ -58,7 +58,7 @@ const sessionStore = new MySQLStore({
 app.use(session({
   store: sessionStore,
   secret: `secret-key-${Date.now()}`,
-  resave: false,
+  resave: false,  
   rolling: true,
   saveUninitialized: false,
   cookie: { maxAge: 3600000, secure: false }

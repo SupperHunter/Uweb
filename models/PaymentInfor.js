@@ -3,6 +3,11 @@ const sequelize = require('../Connect/dbConnect');
 
 // Định nghĩa mô hình Payment
 const PaymentInfor = sequelize.define('Payment', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
+    primaryKey: true
+  },
   cardholderName: {
     type: DataTypes.STRING,
     allowNull: true
