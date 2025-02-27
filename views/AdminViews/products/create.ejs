@@ -155,4 +155,25 @@
       });
     });
   });
+
+
+  function encodeImageFilesAsURLs(element){
+    const files = element.files; // Lấy danh sách các tệp được chọn
+    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']; // Các định dạng ảnh hợp lệ
+    Array.from(files).forEach(file => {
+        const fileType = file.type;
+
+        if (!validImageTypes.includes(fileType)) {
+            console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
+            // Bạn có thể thực hiện thêm các thao tác khác với chuỗi Base64 ở đây
+        }
+        reader.readAsDataURL(file);
+    });
+  }
 </script>

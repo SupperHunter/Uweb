@@ -1,12 +1,12 @@
-<h1>All Product Type in header</h1>
-<a href="/admin/ProductTypeNew" class="btn btn-primary mb-3">Go to add new</a>
+<h1>Tất cả loại sản phẩm</h1>
+<a href="/admin/ProductTypeNew" class="btn btn-primary mb-3">Thêm mới</a>
 
 <table class="table table-bordered table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Actions</th>
+      <th>Tên</th>
+      <th>Mô tả</th>
+      <th>Hành động</th>
     </tr>
   </thead>
   <tbody>
@@ -17,26 +17,26 @@
         </td>
         <td><%- category.Description %></td>
         <td>
-          <a href="/admin/ProductTypeedit/<%= category.id %>" class="btn btn-warning">Edit</a>
+          <a href="/admin/ProductTypeedit/<%= category.id %>" class="btn btn-warning">Chỉnh sửa</a>
           <button class="btn btn-danger" data-bs-toggle="modal"
-            data-bs-target="#deleteModal<%= category.id %>">Delete</button>
+            data-bs-target="#deleteModal<%= category.id %>">Xóa</button>
 
-          <!-- Delete Confirmation Modal -->
+          <!-- Hộp thoại xác nhận xóa -->
           <div class="modal fade" id="deleteModal<%= category.id %>" tabindex="-1" aria-labelledby="deleteModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="deleteModalLabel">Delete Category</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="deleteModalLabel">Xóa loại sản phẩm</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
-                  Are you sure you want to delete the Product type "<%= category.name %>"?
+                  Bạn có chắc chắn muốn xóa loại sản phẩm "<%= category.name %>" không?
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                   <form action="/admin/ProductType/delete/<%= category.id %>" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="submit" class="btn btn-danger">Có, Xóa</button>
                   </form>
                 </div>
               </div>

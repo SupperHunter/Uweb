@@ -6,7 +6,7 @@ const fs = require('fs').promises;
      */
 const imageToBase64 = async (imagefile) => {
     try {
-        const Base64String = imagefile.buffer.toString('base64');
+        const Base64String =  imagefile.buffer.toString('base64');
         return Base64String;
     } catch (error) {
         console.error('Lỗi khi chuyển ảnh sang Base64:', error);

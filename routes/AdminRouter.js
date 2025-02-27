@@ -26,8 +26,6 @@ router.get('/products/:id/edit', Product.showEditForm);
 router.post('/products/:id', upload.array('images'), Product.updateProduct);
 router.post('/products/:id/delete', Product.deleteProduct);
 
-
-
 // ProductType 
 const ProductType = new ProductTypeController();
 router.get('/ProductType', ProductType.getAllCategories);

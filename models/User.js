@@ -3,7 +3,6 @@
   const Role = require('./Role'); // Import the Role model
   const Address = require('./Address');
   const PaymentInfor = require('./PaymentInfor');
-  const BannerTille = require('./BannerTille');
   const User = sequelize.define("User", {
     id: {
       type: DataTypes.UUID,

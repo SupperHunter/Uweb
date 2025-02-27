@@ -17,7 +17,7 @@ const Category = sequelize.define('Category', {
     allowNull: false,
   },
   imageUrl: {
-    type: DataTypes.TEXT,
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   IsActive: {

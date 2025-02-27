@@ -20,7 +20,7 @@
   </div>
   <div class="mb-3">
     <label for="images" class="form-label">Hình Ảnh</label>
-    <input type="file" class="form-control" id="images" name="images" multiple required>
+    <input type="file" class="form-control" id="images" onchange="encodeImageFilesAsURLs(this)" name="images" multiple required>
     <small class="form-text text-muted">Tải lên nhiều hình ảnh bằng cách giữ phím Ctrl (Windows) hoặc Command (Mac)
       trong khi chọn tệp.</small>
   </div>
@@ -68,4 +68,24 @@
     });
 
   });
+
+
+  function encodeImageFilesAsURLs(element){
+    const files = element.files; // Lấy danh sách các tệp được chọn
+    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']; // Các định dạng ảnh hợp lệ
+    Array.from(files).forEach(file => {
+        const fileType = file.type;
+
+        if (!validImageTypes.includes(fileType)) {
+            console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
+        }
+        reader.readAsDataURL(file);
+    });
+  }
 </script>

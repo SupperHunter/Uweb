@@ -1,4 +1,4 @@
-<h1>Edit Product Type</h1>
+<h1>Chỉnh sửa loại sản phẩm</h1>
 
 <style>
   .ck.ck-editor__main>.ck-editor__editable {
@@ -8,17 +8,17 @@
 
 <form id="editCategoryForm" action="/admin/ProductType/edit/<%= category.id %>" method="POST">
   <div class="mb-3">
-    <label for="name" class="form-label">Category Name</label>
+    <label for="name" class="form-label">Tên loại sản phẩm</label>
     <input type="text" class="form-control" id="name" name="name" value="<%= category.name %>" required>
   </div>
 
   <div class="mb-3">
-    <label for="Description" class="form-label">Description</label>
+    <label for="Description" class="form-label">Mô tả</label>
     <div id="editor" name="Description"></div>
-    <input type="hidden" id="Description" name="Description"> <!-- Hidden input to submit CKEditor content -->
+    <input type="hidden" id="Description" name="Description"> <!-- Ô ẩn để gửi dữ liệu từ CKEditor -->
   </div>
 
-  <button type="submit" class="btn btn-primary">Save Changes</button>
+  <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -29,38 +29,33 @@
   let editor;
   ClassicEditor
     .create(document.querySelector('#editor'), {
-      // Increase the minimum height of the editor
-      minHeight: '300px', // Set the minimum height of the input area
+      // Tăng chiều cao tối thiểu của trình soạn thảo
+      minHeight: '300px', // Đặt chiều cao tối thiểu của khu vực nhập
     })
     .then(newEditor => {
       editor = newEditor;
-      // Set the existing category description in the editor if it exists
+      // Thiết lập nội dung mô tả sẵn có nếu có
       editor.setData(`<%= category.Description %>`);
     })
     .catch(error => {
       console.error(error);
     });
 
-  // When the form is submitted, set the content of the hidden input
+  // Khi gửi biểu mẫu, cập nhật nội dung vào ô ẩn
   document.getElementById('editCategoryForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent default form submission
-    // if (confirm('This function is being updated.?')) {
-    //   // Set the content of the hidden input to the CKEditor data
-    //   document.getElementById('Description').value = editor.getData();
-    //   this.submit(); // Submit the form
-    // }
+    e.preventDefault(); // Ngăn chặn gửi biểu mẫu mặc định
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This function is being updated?',
+      title: 'Bạn có chắc chắn?',
+      text: 'Chức năng này đang được cập nhật?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, save it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: 'Có, lưu lại!',
+      cancelButtonText: 'Không, hủy!',
     }).then((result) => {
       if (result.isConfirmed) {
         document.getElementById('Description').value = editor.getData();
-        this.submit(); // This will submit the form
+        this.submit(); // Gửi biểu mẫu
       }
     });
 
