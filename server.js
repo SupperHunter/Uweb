@@ -58,14 +58,14 @@ const sessionStore = new MySQLStore({
 app.use(session({
   store: sessionStore,
   secret: `secret-key-${Date.now()}`,
-  resave: false,  
+  resave: false,
   rolling: true,
   saveUninitialized: false,
   cookie: { maxAge: 3600000, secure: false }
 }));
 
 
-// sequelize.sync({ alter: true }) // Sử dụng { force: true } để xóa và tạo lại bảng
+// sequelize.sync({ force: true }) // Sử dụng { force: true } để xóa và tạo lại bảng
 //   .then(() => {
 //     console.log('Database & tables created!');
 //   })
@@ -90,8 +90,8 @@ server.listen(PORT, () => {
 
 app.use('/payment', paymentRouter);
 // app.use('/admin' , checkRole('admin'), AdminRouter);
-// app.use('/admin', AdminRouter);
-app.use('/admin', adminMiddleware, AdminRouter);
+app.use('/admin', AdminRouter);
+// app.use('/admin', adminMiddleware, AdminRouter);
 app.use('', AuthRouter);
 app.use('', HomeRouter);
 

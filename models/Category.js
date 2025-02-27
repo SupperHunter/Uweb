@@ -17,8 +17,8 @@ const Category = sequelize.define('Category', {
     allowNull: false,
   },
   imageUrl: {
-    type: DataTypes.STRING, // You can also use DataTypes.TEXT if URLs are long
-    allowNull: true, // You can set it to false if imageUrl is mandatory
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   IsActive: {
     type: DataTypes.BOOLEAN,

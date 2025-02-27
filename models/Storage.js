@@ -6,7 +6,7 @@ const Storage = sequelize.define('Storage', {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
         primaryKey: true
-      },
+    },
     size: {
         type: DataTypes.STRING, // Example: '64GB', '128GB'
         allowNull: false,

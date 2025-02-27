@@ -1,6 +1,7 @@
 const Category = require("../../models/Category");
 const cloudinary = require("../../Connect/cloudinaryConfig");
 const { where } = require("sequelize");
+const imageToBase64 = require("../../utils/ImageBase64");
 class CategoryController {
     async getAllCategories(req, res) {
         try {
@@ -21,18 +22,15 @@ class CategoryController {
 
     async createCategory(req, res) {
         const { name, Description } = req.body;
-        console.log(req.file);
         let urlimage = '';
         if (req.files && req.files.length > 0) {
-            const imageUploadPromises = req.files.map((file) => {
-                return new Promise((resolve, reject) => {
-                    cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-                        if (error) {
-                            return reject(error);
-                        }
-                        resolve(result.secure_url);
-                    }).end(file.buffer);
-                });
+            const imageUploadPromises = req.files.map(async (file) => {
+                try {
+                    const imagebase64 = await imageToBase64(file);
+                    return imagebase64;
+                } catch (error) {
+                    return null;
+                }
             });
             const imageUrls = await Promise.all(imageUploadPromises);
             urlimage = imageUrls[0]
@@ -45,8 +43,6 @@ class CategoryController {
             res.status(500).send('Error creating category');
         }
     }
-
-
     async Showformedit(req, res) {
         const category = await Category.findByPk(req.params.id);
         res.render('AdminViews/Categories/edit', {
@@ -55,7 +51,6 @@ class CategoryController {
             layout: 'layouts/admin'
         });
     }
-
     async updateCategory(req, res) {
         const { id } = req.params;
         const { name, Description } = req.body;
@@ -65,16 +60,13 @@ class CategoryController {
                 category.name = name;
                 category.Description = Description;
                 if (req.files && req.files.length > 0) {
-                    console.log("lllllllllllllllllllll");
-                    const imageUploadPromises = req.files.map((file) => {
-                        return new Promise((resolve, reject) => {
-                            cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-                                if (error) {
-                                    return reject(error);
-                                }
-                                resolve(result.secure_url);
-                            }).end(file.buffer);
-                        });
+                    const imageUploadPromises = req.files.map(async (file) => {
+                        try {
+                            const imagebase64 = await imageToBase64(file);
+                            return imagebase64;
+                        } catch (error) {
+                            return null;
+                        }
                     });
                     const imageUrls = await Promise.all(imageUploadPromises);
                     category.imageUrl = imageUrls[0];

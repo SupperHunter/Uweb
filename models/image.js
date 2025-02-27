@@ -14,7 +14,7 @@ const Image = sequelize.define('Image', {
     allowNull: false,
   },
   productId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     references: {
       model: Product,
       key: 'id',

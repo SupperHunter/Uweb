@@ -47,11 +47,11 @@ class ProductController {
                     try {
                         const imagebase64 = await imageToBase64(file);
                         return {
-                            url : imagebase64, 
+                            url: imagebase64,
                             productId: product.id
-                        } 
+                        }
                     } catch (error) {
-                        
+
                     }
                 });
                 const productImages = await Promise.all(imageUploadPromises);
@@ -63,7 +63,7 @@ class ProductController {
             res.status(500).send(err.message);
         }
     }
-// show ra form tạo sản phẩm
+    // show ra form tạo sản phẩm
     async showCreateForm(req, res) {
         const categories = await Category.findAll({
             where: { IsActive: true }
@@ -188,11 +188,11 @@ class ProductController {
                     try {
                         const imagebase64 = await imageToBase64(file);
                         return {
-                            url : imagebase64, 
+                            url: imagebase64,
                             productId: product.id
-                        } 
+                        }
                     } catch (error) {
-                        
+
                     }
                 });
                 const productImages = await Promise.all(imageUploadPromises);
