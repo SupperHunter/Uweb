@@ -6,7 +6,7 @@ const Address = sequelize.define("Address", {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4, // Tạo UUID tự động
         primaryKey: true
-      },
+    },
     street: {
         type: DataTypes.STRING,
         allowNull: false

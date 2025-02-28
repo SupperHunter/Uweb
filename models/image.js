@@ -10,7 +10,7 @@ const Image = sequelize.define('Image', {
     primaryKey: true
   },
   url: {
-    type: DataTypes.TEXT,
+    type: DataTypes.TEXT('long'),
     allowNull: false,
   },
   productId: {

@@ -102,7 +102,8 @@
       <div id="currentImages" class="d-flex flex-wrap" style="padding-top: 25px;">
         <%- product.images.map((img, index)=> `
           <div class="position-relative me-2 mb-2">
-            <img src="${img.url}" alt="product image" style="width: 50px; height: 50px; margin: 5px;">
+            <img src="data:image/png;base64,${img.url}" alt="product image"
+              style="width: 50px; height: 50px; margin: 5px;">
             <input type="hidden" name="removeImages[]" value=""> <!-- This will hold the ID when removed -->
             <input type="hidden" class="original-image-id" value="${img.id}"> <!-- Store the original ID -->
             <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle"

@@ -73,16 +73,6 @@ app.use(session({
 //     console.error('Error syncing database:', err);
 //   });
 
-
-app.use(async (req, res, next) => {
-  try {
-  } catch (error) {
-    console.error('Error fetching product types:', error);
-    res.locals.producttype = []; // Fallback if there's an error
-  }
-  next();
-});
-
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

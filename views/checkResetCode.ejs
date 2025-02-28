@@ -10,110 +10,103 @@
     <!-- Viewport -->
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
-
-    <!-- SEO Meta Tags -->
     <title>Account - ResetPassWord</title>
-    <meta name="description" content="Cartzilla - Multipurpose Bootstrap E-Commerce HTML Template">
-    <meta name="keywords"
-        content="online shop, e-commerce, online store, market, multipurpose, product landing, cart, checkout, ui kit, light and dark mode, bootstrap, html5, css3, javascript, gallery, slider, mobile, pwa">
-    <meta name="author" content="Createx Studio">
+    <mate">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="icon" type="image/png" href="/client2/assets/app-icons/icon-32x32.png" sizes="32x32">
+        <link rel="apple-touch-icon" href="/client2/assets/app-icons/icon-180x180.png">
 
-    <!-- Webmanifest + Favicon / App icons -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="/client2/assets/app-icons/icon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/client2/assets/app-icons/icon-180x180.png">
+        <!-- Theme switcher (color modes) -->
+        <script src="/client2/assets/js/theme-switcher.js"></script>
 
-    <!-- Theme switcher (color modes) -->
-    <script src="/client2/assets/js/theme-switcher.js"></script>
+        <!-- Preloaded local web font (Inter) -->
+        <link rel="preload" href="/client2/assets/fonts/inter-variable-latin.woff2" as="font" type="font/woff2"
+            crossorigin="">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <!-- Font icons -->
+        <link rel="preload" href="/client2/assets/icons/cartzilla-icons.woff2" as="font" type="font/woff2"
+            crossorigin="">
+        <link rel="stylesheet" href="/client2/assets/icons/cartzilla-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Preloaded local web font (Inter) -->
-    <link rel="preload" href="/client2/assets/fonts/inter-variable-latin.woff2" as="font" type="font/woff2"
-        crossorigin="">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <!-- Font icons -->
-    <link rel="preload" href="/client2/assets/icons/cartzilla-icons.woff2" as="font" type="font/woff2" crossorigin="">
-    <link rel="stylesheet" href="/client2/assets/icons/cartzilla-icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Bootstrap + Theme styles -->
+        <link rel="preload" href="/client2/assets/css/theme.min.css" as="style">
+        <link rel="preload" href="/client2/assets/css/theme.rtl.min.css" as="style">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="/client2/assets/css/theme.min.css" id="theme-styles">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                font-family: Arial, sans-serif;
+            }
 
-    <!-- Bootstrap + Theme styles -->
-    <link rel="preload" href="/client2/assets/css/theme.min.css" as="style">
-    <link rel="preload" href="/client2/assets/css/theme.rtl.min.css" as="style">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/client2/assets/css/theme.min.css" id="theme-styles">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
+            .container {
+                max-width: 1200px;
+                margin-top: 50px;
+            }
 
-        .container {
-            max-width: 1200px;
-            margin-top: 50px;
-        }
+            .sign-in-card {
+                padding: 30px;
+            }
 
-        .sign-in-card {
-            padding: 30px;
-        }
+            .sign-in-card h2 {
+                font-size: 32px;
+                font-weight: bold;
+            }
 
-        .sign-in-card h2 {
-            font-size: 32px;
-            font-weight: bold;
-        }
+            .side-info {
+                font-size: 16px;
+                margin-left: 40px;
+            }
 
-        .side-info {
-            font-size: 16px;
-            margin-left: 40px;
-        }
+            .side-info h5 {
+                font-size: 20px;
+                font-weight: bold;
+            }
 
-        .side-info h5 {
-            font-size: 20px;
-            font-weight: bold;
-        }
+            .side-info p {
+                font-size: 14px;
+                color: #555;
+            }
 
-        .side-info p {
-            font-size: 14px;
-            color: #555;
-        }
+            .side-info .benefit {
+                margin-bottom: 20px;
+            }
 
-        .side-info .benefit {
-            margin-bottom: 20px;
-        }
+            .side-info .benefit i {
+                font-size: 24px;
+                margin-right: 10px;
+                color: #007bff;
+            }
 
-        .side-info .benefit i {
-            font-size: 24px;
-            margin-right: 10px;
-            color: #007bff;
-        }
+            .footer-info {
+                font-size: 14px;
+                text-align: center;
+                margin-top: 50px;
+                color: #555;
+            }
 
-        .footer-info {
-            font-size: 14px;
-            text-align: center;
-            margin-top: 50px;
-            color: #555;
-        }
+            .modal-header {
+                justify-content: space-between;
+                /* Để các phần tử trong header cách xa nhau */
+            }
 
-        .modal-header {
-            justify-content: space-between;
-            /* Để các phần tử trong header cách xa nhau */
-        }
+            .modal-title {
+                margin: 0;
+                /* Đảm bảo không có khoảng cách không cần thiết */
+            }
 
-        .modal-title {
-            margin: 0;
-            /* Đảm bảo không có khoảng cách không cần thiết */
-        }
-
-        .close {
-            margin: 0;
-            /* Đảm bảo không có khoảng cách không cần thiết */
-        }
-    </style>
-    <!-- Customizer -->
-    <script src="/client2/assets/js/customizer.min.js"></script>
+            .close {
+                margin: 0;
+                /* Đảm bảo không có khoảng cách không cần thiết */
+            }
+        </style>
+        <!-- Customizer -->
+        <script src="/client2/assets/js/customizer.min.js"></script>
 </head>
 
 

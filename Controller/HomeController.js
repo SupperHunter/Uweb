@@ -16,47 +16,18 @@ class HomeController {
     async HomeRender(req, res) {
         const categories = await Category.findAll({
             where: { IsActive: true },
-            order: [['id', 'ASC']]
+            order: [['createdAt', 'DESC']]
         });
-        const newArrivals1 = await Product.findAll({
-            where: { IsActive: true },
-            order: [['createdAt', 'DESC']], // Order by the most recent
-            limit: 4,
-            include: { model: Image, as: 'images' }
-        });
-        const newArrivalIds = newArrivals1.map(product => product.id);
-        const newArrivals2 = await Product.findAll({
-            where: {
-                IsActive: true,
-                id: { [Op.notIn]: newArrivalIds } // Exclude products from the first tab
-            },
-            order: [['createdAt', 'DESC']], // Order by the most recent
-            limit: 4,
-            include: { model: Image, as: 'images' }
-        });
-
-
         const trendingProducts = await Product.findAll({
             where: { IsActive: true },
-            order: [['stock', 'DESC']], // Order by highest sales (you can replace 'sales' with a relevant field)
+            order: [['createdAt', 'DESC']], // Order by highest sales (you can replace 'sales' with a relevant field)
             limit: 12,
             include: { model: Image, as: 'images' }
         });
-
-        const specialOffers = await Product.findAll({
-            where: { discountprice: { [Op.ne]: null }, IsActive: true }, // Only products with a discount price
-            order: [['discountprice', 'ASC']], // You can order by highest discount or some other criteria
-            limit: 9,
-            include: { model: Image, as: 'images' }
-        });
-
         res.render('User/Home', {
             title: 'Home',
-            newArrivals2,
             categories,
-            newArrivals1,  // New Arrivals section data
             trendingProducts, // Trending Products section data
-            specialOffers, // Special Offers section data
         });
 
     }
