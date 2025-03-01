@@ -20,14 +20,14 @@ class HomeController {
         });
         const trendingProducts = await Product.findAll({
             where: { IsActive: true },
-            order: [['createdAt', 'DESC']], // Order by highest sales (you can replace 'sales' with a relevant field)
+            order: [['createdAt', 'DESC']],
             limit: 12,
             include: { model: Image, as: 'images' }
         });
         res.render('User/Home', {
             title: 'Home',
             categories,
-            trendingProducts, // Trending Products section data
+            trendingProducts,
         });
 
     }
@@ -208,7 +208,6 @@ class HomeController {
     }
 
     async ShowCheckout(req, res) {
-        if (res.locals.cart.length == 0) return res.redirect('/');
         res.render('User/checkout', { title: 'checkout' });
     }
 
