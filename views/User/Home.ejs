@@ -100,14 +100,14 @@
       <% trendingProducts.forEach(product=> { %>
         <div class="col-md-6 col-lg-3 ftco-animate">
           <div class="product">
-            <a href="/product/<%= product.id %>" class="img-prod">
+            <a href="/productdetail/<%= product.id %>" class="img-prod">
               <img class="img-fluid"
                 src="data:image/png;base64,<%= product.images[0].url || '/client/images/default-product.jpg' %>"
                 alt="<%= product.name %>">
               <div class="overlay"></div>
             </a>
             <div class="text py-3 pb-4 px-3 text-center">
-              <h3><a href="/product/<%= product.id %>">
+              <h3><a href="/productdetail/<%= product.id %>">
                   <%= product.name %>
                 </a></h3>
               <div class="d-flex">
@@ -126,16 +126,12 @@
               </div>
               <div class="bottom-area d-flex px-3">
                 <div class="m-auto d-flex">
-                  <a href="javascript:void(0)" 
-                      onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>, <%= product.discountprice || 'null' %>, <%= product.stock || 0 %>)">
+                  <a href="javascript:void(0)" class="buy-now d-flex justify-content-center align-items-center mx-1"
+                      onclick="addToCart('<%= product.id %>', '<%= product.name %>', '<%= product.price %>', 
+                      '<%= product.discountprice ? product.discountprice : 'null' %>', 
+                      '<%= product.stock ? product.stock : '0' %>' ,'<%= product.images[0].url %>')">
                       <span><i class="ion-ios-cart"></i></span>
-                  </a>
-                  <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                    <span><i class="ion-ios-cart"></i></span>
-                  </a>
-                  <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                    <span><i class="ion-ios-heart"></i></span>
-                  </a>
+                    </a>
                 </div>
               </div>
             </div>

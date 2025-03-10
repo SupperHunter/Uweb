@@ -11,7 +11,6 @@ router.get('/productdetail/:id', control.GetWithid);
 
 router.post('/addtocard', control.addtocard);
 
-
 router.get("/Notpermission", (req, res) => {
     res.render('Notpermission', { title: 'Not Permission', layout: 'layouts/layoutEmpty' });
 })
