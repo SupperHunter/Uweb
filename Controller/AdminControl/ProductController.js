@@ -11,11 +11,24 @@ const imageToBase64 = require("../../utils/ImageBase64");
 class ProductController {
     async createProduct(req, res) {
         try {
-            const { name, description, price, category, stock, brand, color, size, TypeProductId } = req.body;
+            const {
+                name,
+                description,
+                price,
+                category,
+                stock,
+                brand,
+                color,
+                size,
+                TypeProductId,
+                imageLinks,
+                imageOption,
+            } = req.body;
+
             const sizes = [...new Set(req.body.sizes)];
             const prices = req.body.prices;
 
-            // Create the product without images first
+            // 1. Tạo sản phẩm
             const product = await Product.create({
                 name,
                 description,
@@ -25,41 +38,60 @@ class ProductController {
                 stock,
                 brand,
                 color,
-                size
+                size,
             });
 
+            // 2. Thêm biến thể (variant theo kích thước + giá)
             if (sizes && sizes.length > 0) {
                 const sizesPromise = sizes.map((size, index) => {
                     if (prices[index] != 0) {
                         return ProductVariants.create({
                             storageId: size,
-                            price: prices[index], // Add price for this size variant
-                            stock: 10, // Assuming stock is constant, adjust as necessary
-                            productId: product.id
+                            price: prices[index],
+                            stock: 10, // điều chỉnh nếu cần
+                            productId: product.id,
                         });
                     }
                 });
                 await Promise.all(sizesPromise);
-
             }
-            if (req.files && req.files.length > 0) {
+
+            // 3. Xử lý ảnh
+            let productImages = [];
+
+            if (imageOption === 'upload' && req.files?.length > 0) {
                 const imageUploadPromises = req.files.map(async (file) => {
                     try {
                         const imagebase64 = await imageToBase64(file);
                         return {
                             url: imagebase64,
-                            productId: product.id
-                        }
+                            productId: product.id,
+                        };
                     } catch (error) {
-
+                        console.warn('Lỗi chuyển ảnh:', error);
+                        return null;
                     }
                 });
-                const productImages = await Promise.all(imageUploadPromises);
+
+                productImages = await Promise.all(imageUploadPromises);
+                productImages = productImages.filter((img) => img); // loại bỏ null
+
+            } else if (imageOption === 'url' && imageLinks) {
+                const urls = imageLinks.split(',').map((url) => url.trim()).filter(Boolean);
+
+                productImages = urls.map((url) => ({
+                    url,
+                    productId: product.id,
+                }));
+            }
+
+            if (productImages.length > 0) {
                 await Image.bulkCreate(productImages);
             }
+
             res.redirect('/admin/products');
         } catch (err) {
-            console.error(err); // Log error for debugging
+            console.error('Lỗi khi tạo sản phẩm:', err);
             res.status(500).send(err.message);
         }
     }
@@ -75,20 +107,19 @@ class ProductController {
         res.render('AdminViews/products/create', { title: 'Create Product', categories, producttype, Store, layout: 'layouts/admin' })
     }
     async getAllProducts(req, res) {
-        const limit = 20;  // Number of products per page
-        const page = parseInt(req.query.page) || 1;  // Current page number, default to 1
+        const limit = 20;
+        const page = parseInt(req.query.page) || 1;
 
         try {
-            // Fetch total product count and products for the current page
             const { count, rows: products } = await Product.findAndCountAll({
                 include: { model: Image, as: 'images' },
                 limit,
                 distinct: true,
-                offset: (page - 1) * limit, // Calculate the offset for pagination
+                offset: (page - 1) * limit,
                 where: { IsActive: true }
             });
 
-            const totalPages = Math.ceil(count / limit);  // Calculate total pages
+            const totalPages = Math.ceil(count / limit);
             console.log(totalPages);
             res.render('AdminViews/products/index', {
                 title: 'Product',
@@ -105,31 +136,27 @@ class ProductController {
 
     async showEditForm(req, res) {
         try {
-            // Fetch the product along with its associated images
             const product = await Product.findByPk(req.params.id, {
                 include: [
                     {
-                        model: Image, as: 'images' // Assuming you have an Image model associated
+                        model: Image, as: 'images'
                     },
                     {
-                        model: Category, as: 'category' // Change here to match the alias defined in the association
+                        model: Category, as: 'category'
                     },
                     {
-                        model: TypeProduct, as: 'TypeProduct' // Use the correct alias
+                        model: TypeProduct, as: 'TypeProduct'
                     },
                     {
                         model: Storage,
-                        as: 'storages', // Use the alias defined in the model association
+                        as: 'storages',
                         through: {
-                            model: ProductVariants, // Explicitly include ProductVariants model
-                            attributes: ['price', 'stock'] // Include price and stock from ProductVariants
+                            model: ProductVariants,
+                            attributes: ['price', 'stock']
                         }
                     }
                 ]
             });
-
-
-            // Check if the product exists
             if (!product) return res.status(404).send('Product not found');
             const categories = await Category.findAll({ where: { IsActive: 1 } });
             const producttype = await TypeProduct.findAll({ where: { delete: 1 } });
@@ -157,52 +184,80 @@ class ProductController {
                 brand,
                 color,
                 size,
-                removeImages
+                removeImages,
+                imageOption,
+                imageLinks
             } = req.body;
-            const sizes = [...new Set(req.body.sizes)];
-            const prices = req.body.prices;
 
+            const sizes = [...new Set(req.body.sizes || [])];
+            const prices = req.body.prices || [];
             const { id } = req.params;
 
             const product = await Product.findByPk(id);
             if (!product) return res.status(404).send('Product not found');
 
-            if (sizes && sizes.length > 0) {
+            // ✅ Cập nhật biến thể size
+            if (sizes.length > 0) {
                 await ProductVariants.destroy({ where: { productId: id } });
-                const sizesPromise = sizes.map((size, index) => {
-                    return ProductVariants.create({
-                        storageId: size,
-                        price: prices[index],
-                        stock: 10,
-                        productId: id
-                    });
-                });
-                await Promise.all(sizesPromise);
-
+                const variants = sizes.map((storageId, index) => ({
+                    storageId,
+                    price: prices[index],
+                    stock: 10,
+                    productId: id
+                }));
+                await ProductVariants.bulkCreate(variants);
             }
 
-            await product.update({ name, description, price, category, stock, brand, color, size });
-            if (req.files && req.files.length > 0) {
-                const imageUploadPromises = req.files.map(async (file) => {
-                    const imagebase64 = await imageToBase64(file);
-                    try {
-                        const imagebase64 = await imageToBase64(file);
-                        return {
-                            url: imagebase64,
-                            productId: product.id
-                        }
-                    } catch (error) {
+            // ✅ Cập nhật thông tin chính
+            await product.update({
+                name,
+                description,
+                price,
+                categoryId: category,
+                stock,
+                brand,
+                color,
+                size
+            });
 
+            // ✅ Xóa ảnh đã chọn
+            if (removeImages && Array.isArray(removeImages)) {
+                await Image.destroy({
+                    where: { id: removeImages.filter((id) => id) } // lọc id hợp lệ
+                });
+            }
+
+            // ✅ Thêm ảnh mới (upload hoặc link)
+            let newImages = [];
+
+            if (imageOption === 'upload' && req.files?.length > 0) {
+                const filePromises = req.files.map(async (file) => {
+                    try {
+                        const base64 = await imageToBase64(file);
+                        return { url: base64, productId: product.id };
+                    } catch (e) {
+                        console.warn('Lỗi khi chuyển ảnh upload:', e.message);
+                        return null;
                     }
                 });
-                const productImages = await Promise.all(imageUploadPromises);
-                await Image.bulkCreate(productImages);
+                newImages = await Promise.all(filePromises);
+                newImages = newImages.filter(Boolean);
+            } else if (imageOption === 'url' && imageLinks) {
+                const links = Array.isArray(imageLinks) ? imageLinks : [imageLinks];
+                const urls = links.map((url) => url.trim()).filter((url) => url);
+                newImages = urls.map((url) => ({
+                    url,
+                    productId: product.id
+                }));
             }
-            if (removeImages && Array.isArray(removeImages)) {
-                await Image.destroy({ where: { id: removeImages } });
+
+            if (newImages.length > 0) {
+                await Image.bulkCreate(newImages);
             }
+
             res.redirect('/admin/products');
         } catch (err) {
+            console.error('Update product error:', err);
             res.status(500).send(err.message);
         }
     }

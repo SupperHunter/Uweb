@@ -13,14 +13,9 @@
   <link rel="stylesheet" href="/assets/vendors/ti-icons/css/themify-icons.css">
   <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css">
   <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.min.css">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
   <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <!-- endinject -->
-  <!-- Layout styles -->
+
   <link rel="stylesheet" href="/assets/css/style.css">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="/assets/images/favicon.png" />
@@ -28,16 +23,89 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
-
-  </script>
-
   <style>
-    .no-js {
-      display: none;
-      color: red;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    .navbar.default-layout-navbar {
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 0 20px;
+    }
+
+    .navbar .nav-item .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid #e0e0e0;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .sidebar .nav .nav-item .nav-link {
+      color: #444;
+      font-weight: 500;
+      padding: 12px 18px;
+      border-radius: 6px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .sidebar .nav .nav-item .nav-link:hover,
+    .sidebar .nav .nav-item .nav-link.active {
+      background-color: #e9f2ff;
+      color: #007bff;
+    }
+
+    .sidebar .nav .menu-title {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .main-panel {
+      background-color: #f8f9fc;
+    }
+
+    .content-wrapper {
+      padding: 2rem 2.5rem;
+    }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .breadcrumb {
+      background: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .breadcrumb-item.active {
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    .navbar-brand img {
+      height: 36px;
+    }
+
+    footer.footer {
+      background: #ffffff;
+      padding: 1rem 2rem;
+      font-size: 14px;
+      border-top: 1px solid #dee2e6;
+      margin-top: auto;
     }
   </style>
+
 </head>
 
 <body>
@@ -171,11 +239,11 @@
 
 
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="/admin/getallpayments">
               <span class="menu-title">InforCard</span>
             </a>
-          </li>
+          </li> -->
 
         </ul>
       </nav>

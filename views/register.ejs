@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             align-items: center;
             height: 100vh;
         }
+
         .register-container {
             max-width: 400px;
             padding: 40px;
@@ -22,13 +24,16 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
+
         .register-container h2 {
             color: #28a745;
             font-weight: bold;
         }
+
         .form-control {
             border-radius: 20px;
         }
+
         .btn-custom {
             background-color: #ff6600;
             border: none;
@@ -37,19 +42,23 @@
             font-size: 16px;
             transition: 0.3s;
         }
+
         .btn-custom:hover {
             background-color: #cc5200;
         }
+
         a {
             color: #ff6600;
             text-decoration: none;
             transition: 0.3s;
         }
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="register-container">
         <h2>Đăng Ký</h2>
@@ -57,15 +66,18 @@
         <form id="register-form">
             <div class="mb-3 text-start">
                 <label for="fullName" class="form-label">Họ và Tên</label>
-                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Nhập họ và tên của bạn" required>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Nhập username"
+                    required>
             </div>
             <div class="mb-3 text-start">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email của bạn" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email của bạn"
+                    required>
             </div>
             <div class="mb-3 text-start">
                 <label for="password" class="form-label">Mật khẩu</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu"
+                    required>
             </div>
             <button type="submit" class="btn btn-custom w-100 text-white">Đăng Ký</button>
         </form>
@@ -76,30 +88,30 @@
         $(document).ready(function () {
             $('#register-form').on('submit', function (event) {
                 event.preventDefault();
-                const fullName = $('#fullName').val();
+
+                const username = $('#username').val();
                 const email = $('#email').val();
                 const password = $('#password').val();
 
                 $.ajax({
-                    url: '/register', // API đăng ký
+                    url: '/register',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ fullName, email, password }),
+                    data: JSON.stringify({ username, email, password }),
                     success: function (response) {
+                        alert(response.message);
                         if (response.status) {
-                            alert('Đăng ký thành công! Vui lòng đăng nhập.');
                             window.location.href = '/login';
-                        } else {
-                            alert(response.message);
                         }
                     },
                     error: function (jqXHR) {
                         const response = jqXHR.responseJSON;
-                        alert(response ? response.message : 'Có lỗi xảy ra, vui lòng thử lại.');
+                        alert(response ? response.message : 'Lỗi kết nối đến server.');
                     }
                 });
             });
         });
     </script>
 </body>
+
 </html>

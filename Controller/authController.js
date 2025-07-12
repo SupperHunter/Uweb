@@ -66,60 +66,37 @@ class authController {
 
   async register(req, res) {
     const { username, password, email } = req.body;
+
+    console.log(req.body);
+
     try {
       const userExists = await User.findOne({ where: { email } });
 
-      if (userExists) return res.render('register', { title: 'Login', status: false, message: 'User already exists', layout: 'layouts/layoutEmpty' });
-
+      if (userExists) {
+        return res.status(400).json({
+          status: false,
+          message: 'Email đã tồn tại',
+        });
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
+      const role = await Role.findAll();
       const newUser = await User.create({
         username,
         email,
         password: hashedPassword,
-        roleId: 2, // Giả sử 1 là admin, 2 là user
+        roleId: role[1].dataValues.id, // Giả sử 1 là admin, 2 là user
       });
-      // sent email right here 
-      const stringhtmlemail = ` <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Registration Successful</title>
-        <style>
-          body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-          .email-container { max-width: 600px; margin: 20px auto; background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-          .email-header { background-color: #007bff; color: white; padding: 15px; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-          .email-body { padding: 20px; text-align: left; color: #333; }
-          .email-footer { margin-top: 20px; text-align: center; font-size: 12px; color: #999; }
-          .email-body h1 { font-size: 24px; color: #007bff; }
-          .email-body p { font-size: 16px; line-height: 1.5; }
-          .btn { display: inline-block; background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
-        </style>
-      </head>
-      <body>
-        <div class="email-container">
-          <div class="email-header">
-            <h2>Welcome to Our Service!</h2>
-          </div>
-          <div class="email-body">
-            <h1>Registration Successful</h1>
-            <p>Dear ${username},</p>
-            <p>Thank you for registering with us. Your account has been successfully created. You can now log in and start exploring our services.</p>
-            <p>If you have any questions, feel free to reply to this email or contact our support team.</p>
-          </div>
-          <div class="email-footer">
-            <p>&copy; 2024 Our Company. All rights reserved.</p>
-            <p>1234 Main St, City, Country</p>
-          </div>
-        </div>
-      </body>
-      </html>`
-      res.redirect('/login');
-      sendEmail(email, 'Registration Successful', stringhtmlemail)
+      // sent email right here
+      return res.status(200).json({
+        status: true,
+        message: 'Đăng ký thành công',
+      });
     } catch (error) {
-      console.log(error);
-      res.redirect('/login');
+      console.error(error);
+      return res.status(500).json({
+        status: false,
+        message: 'Lỗi server, vui lòng thử lại sau',
+      });
     }
   }
 

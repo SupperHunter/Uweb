@@ -31,9 +31,13 @@
         </td>
         <td>
           <% product.images.forEach(image=> { %>
-            <img src="data:image/png;base64,<%= image.url %>" alt="hình ảnh sản phẩm"
-              style="width: 50px; height: 50px;">
-            <% }) %>
+            <% if (image.url.startsWith('http')) { %>
+              <img src="<%= image.url %>" alt="hình ảnh sản phẩm" style="width: 50px; height: 50px;">
+              <% } else { %>
+                <img src="data:image/jpeg;base64,<%= image.url %>" alt="hình ảnh sản phẩm"
+                  style="width: 50px; height: 50px;">
+                <% } %>
+                  <% }) %>
         </td>
         <td>
           <a href="/admin/products/<%= product.id %>/edit" class="btn btn-warning">Chỉnh sửa</a>

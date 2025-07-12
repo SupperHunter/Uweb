@@ -92,9 +92,34 @@
   </div>
 
   <div class="mb-3">
-    <label for="images" class="form-label">Hình Ảnh</label>
-    <input type="file" class="form-control" id="images" name="images" multiple required>
-    <small class="form-text text-muted">Giữ phím Ctrl (Windows) hoặc Command (Mac) để chọn nhiều ảnh.</small>
+    <label class="form-label">Hình Ảnh</label>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="imageOption" id="uploadOption" value="upload" checked>
+      <label class="form-check-label" for="uploadOption">
+        Tải từ thiết bị
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="imageOption" id="urlOption" value="url">
+      <label class="form-check-label" for="urlOption">
+        Nhập link ảnh (Google)
+      </label>
+    </div>
+
+    <!-- Upload từ thiết bị -->
+    <div id="uploadImageSection" class="mt-2">
+      <input type="file" class="form-control" id="images" name="images" multiple>
+      <small class="form-text text-muted">Giữ Ctrl (Windows) hoặc Command (Mac) để chọn nhiều ảnh.</small>
+    </div>
+
+    <!-- Link ảnh -->
+    <div id="urlImageSection" class="mt-2" style="display:none;">
+      <input type="text" class="form-control" id="imageLinks" name="imageLinks"
+        placeholder="Nhập link ảnh, phân tách bằng dấu phẩy">
+      <small class="form-text text-muted">Nhập link ảnh từ Google Drive/Google Image, phân tách bằng dấu phẩy nếu nhiều
+        link.</small>
+    </div>
   </div>
 
   <button type="submit" class="btn btn-primary">Gửi</button>
@@ -157,23 +182,39 @@
   });
 
 
-  function encodeImageFilesAsURLs(element){
+  function encodeImageFilesAsURLs(element) {
     const files = element.files; // Lấy danh sách các tệp được chọn
     const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']; // Các định dạng ảnh hợp lệ
     Array.from(files).forEach(file => {
-        const fileType = file.type;
+      const fileType = file.type;
 
-        if (!validImageTypes.includes(fileType)) {
-            console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
-            return;
-        }
+      if (!validImageTypes.includes(fileType)) {
+        console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
+        return;
+      }
 
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
-            // Bạn có thể thực hiện thêm các thao tác khác với chuỗi Base64 ở đây
-        }
-        reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
+        // Bạn có thể thực hiện thêm các thao tác khác với chuỗi Base64 ở đây
+      }
+      reader.readAsDataURL(file);
     });
   }
+
+  const uploadRadio = document.getElementById('uploadOption');
+  const urlRadio = document.getElementById('urlOption');
+  const uploadSection = document.getElementById('uploadImageSection');
+  const urlSection = document.getElementById('urlImageSection');
+
+  uploadRadio.addEventListener('change', () => {
+    uploadSection.style.display = 'block';
+    urlSection.style.display = 'none';
+  });
+
+  urlRadio.addEventListener('change', () => {
+    uploadSection.style.display = 'none';
+    urlSection.style.display = 'block';
+  });
+
 </script>

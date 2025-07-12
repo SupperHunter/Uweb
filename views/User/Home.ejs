@@ -43,7 +43,7 @@
               <div class="text text-center">
                 <h2>Hoa quả sạch</h2>
                 <p>Bảo vệ sức khỏe cho thành viên gia đình </p>
-                <p><a href="#" class="btn btn-primary">Shop now</a></p>
+                <p><a href="#" class="btn btn-primary">Mua ngay</a></p>
               </div>
             </div>
           </div>
@@ -98,10 +98,10 @@
         <div class="col-md-6 col-lg-3 ftco-animate">
           <div class="product">
             <a href="/productdetail/<%= product.id %>" class="img-prod">
-              <img class="img-fluid"
-                src="data:image/png;base64,<%= product.images[0].url || '/client/images/default-product.jpg' %>"
-                alt="<%= product.name %>">
-              <div class="overlay"></div>
+              <% const image=product.images[0]?.url; const isHttp=image?.startsWith('http'); const src=image ? (isHttp ?
+                image : `data:image/png;base64,${image}`) : '/client/images/default-product.jpg' ; %>
+                <img class="img-fluid" src="<%= src %>" alt="<%= product.name %>">
+                <div class="overlay"></div>
             </a>
             <div class="text py-3 pb-4 px-3 text-center">
               <h3><a href="/productdetail/<%= product.id %>">

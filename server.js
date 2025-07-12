@@ -80,8 +80,8 @@ server.listen(PORT, () => {
 
 app.use('/payment', paymentRouter);
 // app.use('/admin' , checkRole('admin'), AdminRouter);
-app.use('/admin', AdminRouter);
-// app.use('/admin', adminMiddleware, AdminRouter);
+// app.use('/admin', AdminRouter);
+app.use('/admin', adminMiddleware, AdminRouter);
 app.use('', AuthRouter);
 app.use('', HomeRouter);
 

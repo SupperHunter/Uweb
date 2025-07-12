@@ -2,6 +2,7 @@ const Category = require("../../models/Category");
 const cloudinary = require("../../Connect/cloudinaryConfig");
 const { where } = require("sequelize");
 const imageToBase64 = require("../../utils/ImageBase64");
+const axios = require('axios');
 class CategoryController {
     async getAllCategories(req, res) {
         try {
@@ -21,21 +22,32 @@ class CategoryController {
     }
 
     async createCategory(req, res) {
-        const { name, Description } = req.body;
+        const { name, Description, imageLinks } = req.body;
         let urlimage = '';
-        if (req.files && req.files.length > 0) {
-            const imageUploadPromises = req.files.map(async (file) => {
-                try {
-                    const imagebase64 = await imageToBase64(file);
-                    return imagebase64;
-                } catch (error) {
-                    return null;
-                }
-            });
-            const imageUrls = await Promise.all(imageUploadPromises);
-            urlimage = imageUrls[0]
-        }
+
         try {
+            // Nếu người dùng chọn upload từ máy
+            if (req.files && req.files.length > 0) {
+                const imageUploadPromises = req.files.map(async (file) => {
+                    try {
+                        const imagebase64 = await imageToBase64(file.path); // hoặc dùng path
+                        return imagebase64;
+                    } catch (error) {
+                        console.error("Lỗi convert ảnh:", error);
+                        return null;
+                    }
+                });
+
+                const imageUrls = await Promise.all(imageUploadPromises);
+                urlimage = imageUrls.find(url => url); // lấy ảnh đầu tiên hợp lệ
+
+            } else if (imageLinks) {
+                const links = imageLinks.split('\n').map(link => link.trim()).filter(Boolean);
+                if (links.length > 0) {
+                    urlimage = links[0]; // ✅ Chỉ lưu link trực tiếp, không chuyển base64
+                }
+            }
+
             await Category.create({ name, Description, imageUrl: urlimage });
             res.redirect('/admin/categories');
         } catch (error) {

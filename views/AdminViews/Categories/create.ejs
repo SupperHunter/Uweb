@@ -1,30 +1,115 @@
-<h1>Thêm Danh Mục Mới</h1>
+<h1 class="text-center my-4"> Thêm Danh Mục Mới</h1>
 
 <style>
   .ck.ck-editor__main>.ck-editor__editable {
-    height: 200px;
+    min-height: 200px;
+  }
+
+  .form-section {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .form-label {
+    font-weight: 600;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+  }
+
+  .form-check-label {
+    font-weight: 500;
+    margin-left: 6px;
+    font-size: 15px;
+  }
+
+  .form-check-inline {
+    margin-right: 20px;
+    padding-left: 10px;
+  }
+
+  .form-label-with-icon {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .form-label-with-icon img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .form-check-input {
+    opacity: 1 !important;
+    filter: none !important;
+    margin-top: 4px;
+  }
+
+  .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+
+  .form-check-input:focus {
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
   }
 </style>
 
-<form id="createCategoryForm" action="/admin/categoriesnew" method="POST" enctype="multipart/form-data">
-  <div class="mb-3">
-    <label for="name" class="form-label">Tên Danh Mục</label>
+<form id="createCategoryForm" action="/admin/categoriesnew" method="POST" enctype="multipart/form-data"
+  class="container">
+  <div class="form-section">
     <input type="hidden" name="authToken" id="authToken">
-    <input type="text" class="form-control" id="name" name="name" required>
-  </div>
 
-  <div class="mb-3">
-    <label for="Description" class="form-label">Mô Tả</label>
-    <div id="editor"></div>
-    <input type="hidden" id="Description" name="Description" required>
+    <div class="mb-4">
+      <label for="name" class="form-label">📌 Tên Danh Mục</label>
+      <input type="text" class="form-control" id="name" name="name" required placeholder="Nhập tên danh mục...">
+    </div>
+
+    <div class="mb-4">
+      <label for="Description" class="form-label">📝 Mô Tả</label>
+      <div id="editor"></div>
+      <input type="hidden" id="Description" name="Description" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label-with-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/3597/3597088.png" alt="icon"> Chọn loại ảnh
+      </label>
+
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="imageType" id="uploadLocal" value="local" checked>
+        <label class="form-check-label" for="uploadLocal">Tải từ máy</label>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="imageType" id="uploadLink" value="link">
+        <label class="form-check-label" for="uploadLink">Dán liên kết ảnh</label>
+      </div>
+    </div>
+
+    <div class="mb-4" id="localUploadGroup">
+      <label for="images" class="form-label">📂 Hình Ảnh</label>
+      <input type="file" class="form-control" id="images" name="images" multiple
+        onchange="encodeImageFilesAsURLs(this)">
+      <small class="form-text text-muted">Giữ Ctrl/Command để chọn nhiều ảnh.</small>
+    </div>
+
+    <div class="mb-4 d-none" id="linkUploadGroup">
+      <label for="imageLinks" class="form-label">🔗 Liên Kết Ảnh</label>
+      <textarea class="form-control" id="imageLinks" name="imageLinks" rows="3"
+        placeholder="Mỗi dòng 1 liên kết ảnh (https://...)"></textarea>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-success px-4 py-2">✅ Gửi</button>
+    </div>
   </div>
-  <div class="mb-3">
-    <label for="images" class="form-label">Hình Ảnh</label>
-    <input type="file" class="form-control" id="images" onchange="encodeImageFilesAsURLs(this)" name="images" multiple required>
-    <small class="form-text text-muted">Tải lên nhiều hình ảnh bằng cách giữ phím Ctrl (Windows) hoặc Command (Mac)
-      trong khi chọn tệp.</small>
-  </div>
-  <button type="submit" class="btn btn-primary">Gửi</button>
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -50,8 +135,18 @@
       console.error(error);
     });
 
+
+  document.querySelectorAll('input[name="imageType"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const isLocal = this.value === 'local';
+      document.getElementById('localUploadGroup').classList.toggle('d-none', !isLocal);
+      document.getElementById('linkUploadGroup').classList.toggle('d-none', isLocal);
+    });
+  });
+
+
   document.getElementById('createCategoryForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Ngăn chặn gửi biểu mẫu mặc định
+    e.preventDefault();
 
     Swal.fire({
       title: 'Bạn có chắc chắn không?',
@@ -63,29 +158,38 @@
     }).then((result) => {
       if (result.isConfirmed) {
         document.getElementById('Description').value = editor.getData();
-        this.submit(); // Gửi biểu mẫu
+
+        const imageType = document.querySelector('input[name="imageType"]:checked').value;
+
+        // Nếu chọn "link", disable input file để không gửi file
+        if (imageType === 'link') {
+          document.getElementById('images').disabled = true;
+        } else {
+          document.getElementById('imageLinks').disabled = true;
+        }
+
+        this.submit();
       }
     });
-
   });
 
 
-  function encodeImageFilesAsURLs(element){
+  function encodeImageFilesAsURLs(element) {
     const files = element.files; // Lấy danh sách các tệp được chọn
     const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']; // Các định dạng ảnh hợp lệ
     Array.from(files).forEach(file => {
-        const fileType = file.type;
+      const fileType = file.type;
 
-        if (!validImageTypes.includes(fileType)) {
-            console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
-            return;
-        }
+      if (!validImageTypes.includes(fileType)) {
+        console.warn(`Tệp ${file.name} không phải là định dạng ảnh hợp lệ.`);
+        return;
+      }
 
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
-        }
-        reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        console.log(`Kết quả Base64 của ${file.name}:`, reader.result);
+      }
+      reader.readAsDataURL(file);
     });
   }
 </script>

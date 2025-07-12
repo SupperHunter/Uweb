@@ -96,21 +96,60 @@
 
   <div class="mb-3">
     <label for="images" class="form-label">Images (Upload multiple images)</label>
-    <input type="file" class="form-control" id="images" name="images" multiple>
+    <div class="form-check mt-2">
+      <input class="form-check-input" type="radio" name="imageOption" id="uploadOption" value="upload" checked>
+      <label class="form-check-label" for="uploadOption">
+        Upload from device
+      </label>
+    </div>
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="radio" name="imageOption" id="urlOption" value="url">
+      <label class="form-check-label" for="urlOption">
+        Enter image URLs (comma-separated)
+      </label>
+    </div>
+
+    <!-- Upload section -->
+    <div id="uploadImageSection">
+      <input type="file" class="form-control" id="images" name="images" multiple>
+    </div>
+
+    <!-- Link section -->
+    <div id="urlImageSection" style="display: none;">
+      <div id="linkInputsContainer">
+        <% product.images.forEach((img)=> { %>
+          <% if (img.url.startsWith('http')) { %>
+            <div class="d-flex mb-2 align-items-center link-item">
+              <input type="text" class="form-control me-2" name="imageLinks[]" value="<%= img.url %>" />
+              <button type="button" class="btn btn-outline-danger btn-sm remove-link">✕</button>
+            </div>
+            <% } %>
+              <% }) %>
+      </div>
+      <button type="button" class="btn btn-sm btn-secondary mt-2" id="addLinkInput">+ Add another link</button>
+    </div>
+
     <small class="form-text text-muted">
       Current images:
       <div id="currentImages" class="d-flex flex-wrap" style="padding-top: 25px;">
-        <%- product.images.map((img, index)=> `
+        <% product.images.forEach((img, index)=> { %>
           <div class="position-relative me-2 mb-2">
-            <img src="data:image/png;base64,${img.url}" alt="product image"
-              style="width: 50px; height: 50px; margin: 5px;">
-            <input type="hidden" name="removeImages[]" value=""> <!-- This will hold the ID when removed -->
-            <input type="hidden" class="original-image-id" value="${img.id}"> <!-- Store the original ID -->
-            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle"
-              data-index="${index}" aria-label="Remove image"
-              style="font-size: 12px; padding: 0.1rem 0.3rem; border-radius: 50%;">&times;</button>
+            <% if (img.url.startsWith('http')) { %>
+              <img src="<%= img.url %>" alt="product image"
+                style="width: 50px; height: 50px; margin: 5px; object-fit: cover; border-radius: 4px;">
+              <% } else { %>
+                <img src="data:image/png;base64,<%= img.url %>" alt="product image"
+                  style="width: 50px; height: 50px; margin: 5px; object-fit: cover; border-radius: 4px;">
+                <% } %>
+
+                  <input type="hidden" name="removeImages[]" value=""> <!-- This will hold the ID when removed -->
+                  <input type="hidden" class="original-image-id" value="<%= img.id %>"> <!-- Store the original ID -->
+
+                  <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle"
+                    data-index="<%= index %>" aria-label="Remove image"
+                    style="font-size: 12px; padding: 0.1rem 0.3rem; border-radius: 50%;">&times;</button>
           </div>
-          `).join('') %>
+          <% }) %>
       </div>
     </small>
   </div>
@@ -200,6 +239,41 @@
       // Log the current state of removeImages for debugging
       const removeImages = Array.from(document.querySelectorAll('input[name="removeImages[]"]')).map(input => input.value);
       console.log('Current removeImages array:', removeImages);
+    }
+  });
+
+  // Toggle between upload or URL input
+  const uploadOption = document.getElementById('uploadOption');
+  const urlOption = document.getElementById('urlOption');
+  const uploadSection = document.getElementById('uploadImageSection');
+  const urlSection = document.getElementById('urlImageSection');
+
+  uploadOption.addEventListener('change', () => {
+    uploadSection.style.display = 'block';
+    urlSection.style.display = 'none';
+  });
+
+  urlOption.addEventListener('change', () => {
+    uploadSection.style.display = 'none';
+    urlSection.style.display = 'block';
+  });
+
+  document.getElementById('addLinkInput').addEventListener('click', function () {
+    const container = document.getElementById('linkInputsContainer');
+    const div = document.createElement('div');
+    div.className = 'd-flex mb-2 align-items-center link-item';
+
+    div.innerHTML = `
+    <input type="text" class="form-control me-2" name="imageLinks[]" placeholder="Enter image URL" />
+    <button type="button" class="btn btn-outline-danger btn-sm remove-link">✕</button>
+  `;
+
+    container.appendChild(div);
+  });
+
+  document.getElementById('linkInputsContainer').addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-link')) {
+      e.target.closest('.link-item')?.remove();
     }
   });
 

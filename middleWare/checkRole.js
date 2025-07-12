@@ -8,11 +8,13 @@ function adminMiddleware(req, res, next) {
     return res.redirect('/Notpermission'); // Không có token
   }
 
-  jwt.verify(token, process.env.TokenSecret, (err, user) => {
+  jwt.verify(token, process.env.TokenSecret, async (err, user) => {
     if (err) {
       return res.redirect('/Notpermission'); // Token không hợp lệ
     }
-    if (user.roleId === 1) {
+    const roleuser = await Role.findByPk(user.roleId);
+
+    if (roleuser != null && roleuser.name === "admin") {
       req.user = user;
       return next();
     } else {
